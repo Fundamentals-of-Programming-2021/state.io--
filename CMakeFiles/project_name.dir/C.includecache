@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/main.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+

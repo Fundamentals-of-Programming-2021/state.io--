@@ -1,0 +1,3 @@
+/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/edit_cache.dir
+/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/rebuild_cache.dir
+/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/state.dir
