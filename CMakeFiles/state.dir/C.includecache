@@ -23,4 +23,6 @@ SDL2/SDL.h
 -
 SDL2/SDL2_gfxPrimitives.h
 -
+SDL2/SDL_ttf.h
+-
 
