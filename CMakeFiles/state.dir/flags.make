@@ -6,5 +6,5 @@ C_FLAGS =   -std=gnu99
 
 C_DEFINES = 
 
-C_INCLUDES = -I/usr/include/SDL2 -I/usr/include/SDL2-all -I/usr/include/SDL2/SDL_image 
+C_INCLUDES = -I/usr/include/SDL2 
 

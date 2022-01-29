@@ -6,23 +6,3 @@
 
 #IncludeRegexTransform: 
 
-/home/amir-ravan/Desktop/mabani project/state.io/src/main-map.c
-stdio.h
--
-stdbool.h
--
-time.h
--
-stdlib.h
--
-math.h
--
-stdint.h
--
-SDL2/SDL.h
--
-SDL2/SDL2_gfxPrimitives.h
--
-SDL2/SDL_ttf.h
--
-
