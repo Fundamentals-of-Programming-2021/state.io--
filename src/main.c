@@ -8,17 +8,20 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 #define FPS 60
-#define BKG_PATH "images/background/2.bmp"
 #define TXT_HEADER 0
 #define TXT_HANDWRITE 1
 #define TXT_BODY 2
+#define TXR_CENTER -1
+#define TXR_DEFAULT_SIZE -1
 
+char BKG_PATH[100] = {"images/background/3.bmp"};
 const int WIDTH = 1800;
 const int HEIGHT = 900;
-char user_name[500];
-
+char user_name[25];
+int frame = 0;
 typedef struct
 {
     Sint16 x;
@@ -31,14 +34,14 @@ SDL_Texture *text_texture(SDL_Renderer *Renderer,char* str,int ptrsize,int flag,
     TTF_Font *font;
     if (flag == TXT_HEADER)
     {
-        font = TTF_OpenFont("fonts/header/3.ttf",ptrsize);
+        font = TTF_OpenFont("fonts/header/2.ttf",ptrsize);
         if (font == NULL)printf("ERROR : %s\n",SDL_GetError());
-        TTF_SetFontStyle(font,TTF_STYLE_BOLD);
+        // TTF_SetFontStyle(font,TTF_STYLE_BOLD);
     }
     else if(flag == TXT_BODY)
     {
 
-        font = TTF_OpenFont("fonts/body/1.ttf",ptrsize);
+        font = TTF_OpenFont("fonts/body/2.ttf",ptrsize);
         if (font == NULL)printf("ERROR : %s\n",SDL_GetError());
     
     }
@@ -55,24 +58,6 @@ SDL_Texture *text_texture(SDL_Renderer *Renderer,char* str,int ptrsize,int flag,
     return txtTexture;    
 }
 
-int strlength(char str[])
-{
-    int head = 0;
-    int num = 0;
-    while(str[head])
-    {
-        if (str[head] == ' ' || str[head] == '.')
-        {
-            num += 5;
-        }
-        else
-        {
-            num += 15;
-        }
-        head ++;
-    }
-    return num;
-}
 void handling(void)
 {
 	SDL_Event event;
@@ -102,8 +87,11 @@ void handling(void)
         {
             if(event.type == SDL_TEXTINPUT)
             {
-                user_name[strlen(user_name)] = *(event.text.text);
-                user_name[strlen(user_name)] = '\0';
+                if(strlen(user_name) < 20)
+                {
+                    user_name[strlen(user_name)] = *(event.text.text);
+                    user_name[strlen(user_name)] = '\0';
+                }
             }
             else if (event.type == SDL_KEYDOWN)
             {
@@ -116,9 +104,7 @@ void handling(void)
                     exit(0);
                 }
             }
-            printf("%s\n",user_name);
         }
-        
 	}
 }
 
@@ -134,6 +120,42 @@ SDL_Texture *loadimg(char* file_location,SDL_Renderer *Renderer)
     SDL_Texture *Texture = SDL_CreateTextureFromSurface(Renderer,imgsurface);
     SDL_FreeSurface(imgsurface);
     return Texture;
+}
+
+SDL_Rect texture_position(SDL_Texture *txt_texture,int x,int y,int w,int h)
+{
+    SDL_Rect txt_rect = {.x = x , .y = y , .h = h , .w = w};
+    SDL_Rect txt_info;
+    SDL_QueryTexture(txt_texture,NULL,NULL,&txt_info.w,&txt_info.h);
+
+    if (x == TXR_CENTER)
+    {
+        txt_rect.x = WIDTH/2 - txt_info.w/2;
+    }
+    if (y == TXR_CENTER)
+    {
+        txt_rect.y = HEIGHT/2 - txt_info.h/2;
+    }
+    if (w == TXR_DEFAULT_SIZE)
+    {
+        txt_rect.w = txt_info.w;
+    }
+    if (h == TXR_DEFAULT_SIZE)
+    {
+        txt_rect.h = txt_info.h;
+    }
+    return txt_rect;
+}
+
+SDL_Texture *dynamic_background(SDL_Renderer *Renderer,SDL_Texture *BKG_texture)
+{
+    if (frame % 60 == 0)
+    {
+        int bkg_num = rand()%3+1;
+        BKG_PATH[18] = (char)(bkg_num + '0');
+        BKG_texture = loadimg(BKG_PATH , Renderer);
+    }
+    return BKG_texture;
 }
 
 int main()
@@ -154,47 +176,41 @@ int main()
     SDL_SetRenderDrawColor(Renderer,0,0,0,0);
     
     SDL_Texture *BKG_texture = loadimg(BKG_PATH , Renderer);
-    SDL_Rect BKG_rect;
-    SDL_QueryTexture(BKG_texture,NULL,NULL,&BKG_rect.w,&BKG_rect.h);
-    BKG_rect.x = 900 - BKG_rect.w/2 ; BKG_rect.y = 450 - BKG_rect.h/2;
-    
-    SDL_Texture *head_texture = text_texture(Renderer,"STATE.IO",50,TXT_HEADER,255,255,255,255);
-    SDL_Rect head_rect;
-    SDL_QueryTexture(head_texture,NULL,NULL,&head_rect.w,&head_rect.h);
-    head_rect.x = 900 - head_rect.w/2; head_rect.y = 20; 
-    
-    SDL_Texture *signiture_texture = text_texture(Renderer,"by amir hossein ravan nakhajvani",200,TXT_HANDWRITE,255,255,255,150);
-    SDL_Rect signiture_rect;
-    SDL_QueryTexture(head_texture,NULL,NULL,&signiture_rect.w,&signiture_rect.h);
-    signiture_rect.w += 100 ; signiture_rect.h += 10;
-    signiture_rect.x = 900 - signiture_rect.w/2; signiture_rect.y = 800; 
+    SDL_Rect BKG_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+
     
     SDL_Rect userTXT_rect;
     SDL_Texture *userTXT_texture;
     
+    SDL_Texture *message_texture = text_texture(Renderer,"please ENTER username :",60,TXT_HEADER,255,255,255,150);
+    SDL_Rect messsage_rect = texture_position(message_texture,TXR_CENTER,450,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+    
     while(1)
 	{
+        frame++;
+        if (frame == 99) frame = 0;
+
+        BKG_texture = dynamic_background(Renderer,BKG_texture);
+        
         SDL_RenderCopy(Renderer,BKG_texture,NULL,&BKG_rect);
 
-        boxColor(Renderer,200,150,1600,200,0xaa010101);
+        boxColor(Renderer,600,474+100,1200,476+100,0x332288aa);
+        boxColor(Renderer,600,574+100,1200,576+100,0x332288aa);
         userTXT_texture = text_texture(Renderer,user_name,50,TXT_BODY,255,255,255,255);
-        userTXT_rect.w = strlength(user_name);
-        userTXT_rect.h = 40;
-        userTXT_rect.x = 900 - userTXT_rect.w/2; userTXT_rect.y = 155;
+        userTXT_rect = texture_position(userTXT_texture,TXR_CENTER,600,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
         
 		handling();
 
+        SDL_RenderCopy(Renderer,message_texture,NULL,&messsage_rect);
         SDL_RenderCopy(Renderer,userTXT_texture,NULL,&userTXT_rect);
-        SDL_RenderCopy(Renderer,head_texture,NULL,&head_rect);
-        SDL_RenderCopy(Renderer,signiture_texture,NULL,&signiture_rect);
+        
         SDL_RenderPresent(Renderer);
 		SDL_Delay(1000/FPS); 
         SDL_DestroyTexture(userTXT_texture);
         SDL_RenderClear(Renderer);
 
 	}
-
-    SDL_DestroyTexture(head_texture);
+    SDL_DestroyTexture(message_texture);
     SDL_DestroyTexture(BKG_texture);
     BKG_texture = NULL;
     SDL_StopTextInput();
@@ -202,5 +218,6 @@ int main()
     SDL_DestroyRenderer(Renderer);
     TTF_Quit();
     SDL_Quit();
+
     return 0;
 }

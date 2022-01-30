@@ -8,4 +8,4 @@ add_executable(state "${SOURCE}")
 include_directories("/usr/include/SDL2")
 include_directories("/usr/include")
 
-target_link_libraries(state m SDL2 SDL2_gfx SDL2_ttf SDL2_image)
+target_link_libraries(state m SDL2 SDL2_gfx SDL2_ttf SDL2_image SDL2_mixer)  
