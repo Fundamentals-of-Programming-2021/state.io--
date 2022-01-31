@@ -123,6 +123,33 @@ state/fast:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/build
 .PHONY : state/fast
 
+src/first-page.o: src/first-page.c.o
+
+.PHONY : src/first-page.o
+
+# target to build an object file
+src/first-page.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first-page.c.o
+.PHONY : src/first-page.c.o
+
+src/first-page.i: src/first-page.c.i
+
+.PHONY : src/first-page.i
+
+# target to preprocess a source file
+src/first-page.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first-page.c.i
+.PHONY : src/first-page.c.i
+
+src/first-page.s: src/first-page.c.s
+
+.PHONY : src/first-page.s
+
+# target to generate assembly for a file
+src/first-page.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first-page.c.s
+.PHONY : src/first-page.c.s
+
 src/main-map.o: src/main-map.c.o
 
 .PHONY : src/main-map.o
@@ -177,6 +204,33 @@ src/main.c.s:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/user_name.o: src/user_name.c.o
+
+.PHONY : src/user_name.o
+
+# target to build an object file
+src/user_name.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/user_name.c.o
+.PHONY : src/user_name.c.o
+
+src/user_name.i: src/user_name.c.i
+
+.PHONY : src/user_name.i
+
+# target to preprocess a source file
+src/user_name.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/user_name.c.i
+.PHONY : src/user_name.c.i
+
+src/user_name.s: src/user_name.c.s
+
+.PHONY : src/user_name.s
+
+# target to generate assembly for a file
+src/user_name.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/user_name.c.s
+.PHONY : src/user_name.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -186,12 +240,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... state"
+	@echo "... src/first-page.o"
+	@echo "... src/first-page.i"
+	@echo "... src/first-page.s"
 	@echo "... src/main-map.o"
 	@echo "... src/main-map.i"
 	@echo "... src/main-map.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/user_name.o"
+	@echo "... src/user_name.i"
+	@echo "... src/user_name.s"
 .PHONY : help
 
 

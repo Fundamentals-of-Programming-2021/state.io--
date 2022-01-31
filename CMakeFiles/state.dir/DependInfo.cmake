@@ -4,8 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/amir-ravan/Desktop/mabani project/state.io/src/first-page.c" "/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/state.dir/src/first-page.c.o"
   "/home/amir-ravan/Desktop/mabani project/state.io/src/main-map.c" "/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/state.dir/src/main-map.c.o"
   "/home/amir-ravan/Desktop/mabani project/state.io/src/main.c" "/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/state.dir/src/main.c.o"
+  "/home/amir-ravan/Desktop/mabani project/state.io/src/user_name.c" "/home/amir-ravan/Desktop/mabani project/state.io/CMakeFiles/state.dir/src/user_name.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

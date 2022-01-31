@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/state.dir/src/first-page.c.o"
   "CMakeFiles/state.dir/src/main-map.c.o"
   "CMakeFiles/state.dir/src/main.c.o"
+  "CMakeFiles/state.dir/src/user_name.c.o"
   "state"
   "state.pdb"
 )
