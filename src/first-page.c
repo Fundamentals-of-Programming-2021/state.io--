@@ -9,9 +9,9 @@
 // #include <SDL2/SDL2_gfxPrimitives.h>
 // #include <SDL2/SDL_ttf.h>
 // #include <SDL2/SDL_mixer.h>
+// #include <SDL2/SDL_image.h>
 
 // #define FPS 60
-// #define BKG_PATH "images/background/1.bmp"
 // #define TXT_HEADER 0
 // #define TXT_HANDWRITE 1
 // #define TXT_BODY 2
@@ -19,10 +19,13 @@
 // #define TXR_DEFAULT_SIZE -1
 
 // bool mouse_is_down = 0;
+// bool return_is_down = 0;
+// char BKG_PATH[100] = "images/background/5.jpg";
 
-// const int WIDTH = 1800;
-// const int HEIGHT = 900;
+// const int WIDTH = 700;
+// const int HEIGHT = 1000;
 // char user_name[500];
+// int frame = 0 ;
 
 // typedef struct
 // {
@@ -32,6 +35,7 @@
 
 // _coord mouse_pos;
 // bool running = 1;
+// int selected_option = 0;
 
 // int power(int base,int Pow)
 // {
@@ -123,15 +127,41 @@
 //                 else if (event.key.keysym.sym == SDLK_RETURN && strlen(user_name) > 0)
 //                 {
 //                     running = 0;
+//                     return_is_down = 1;
+//                 }
+//                 else if (event.key.keysym.sym == SDLK_UP)
+//                 {
+//                     selected_option -= 1;
+//                     if (selected_option < 1)
+//                     {
+//                         selected_option = 1;
+//                     }
+//                 }
+//                 else if (event.key.keysym.sym == SDLK_DOWN)
+//                 {
+//                     selected_option += 1;
+//                     if (selected_option > 2)
+//                     {
+//                         selected_option = 2;
+//                     }
 //                 }
 //             }
 //         }
+//         if (event.type == SDL_KEYUP)
+//         {
+//             if (event.key.keysym.sym == SDLK_RETURN)
+//             {
+//                 return_is_down =1;
+//             }
+            
+//         }
+        
 // 	}
 // }
 
 // SDL_Texture *loadimg(char* file_location,SDL_Renderer *Renderer)
 // {
-//     SDL_Surface *imgsurface = SDL_LoadBMP(file_location);
+//     SDL_Surface *imgsurface = IMG_Load(file_location);
 //     if (imgsurface == NULL)
 //     {
 //         printf("can not open image: %s \n",file_location);
@@ -168,27 +198,38 @@
 //     return txt_rect;
 // }
 
+// SDL_Texture *dynamic_background(SDL_Renderer *Renderer,SDL_Texture *BKG_texture)
+// {
+//     if (frame % 60 == 0)
+//     {
+//         int bkg_num = rand()%7+1;
+//         BKG_PATH[18] = (char)(bkg_num + '0');
+//         BKG_texture = loadimg(BKG_PATH , Renderer);
+//     }
+//     return BKG_texture;
+// }
+
 // void menu_options(SDL_Renderer *Renderer)
 // {
-//     boxColor(Renderer,900-200,230+350-75,900+200,305+350-75,0xaa300101);
-//     boxColor(Renderer,900-200,315+350-75,900+200,390+350-75,0xaa013001);
+//     boxColor(Renderer,WIDTH/2-200,HEIGHT/2-200,WIDTH/2+200,HEIGHT/2+300,0x55010101);
+//     rectangleColor(Renderer,WIDTH/2-200,HEIGHT/2-200,WIDTH/2+200,HEIGHT/2+300,0xffffffff);
 
 //     SDL_Texture *start_txtr = loadimg("menu/Start.bmp",Renderer);
 //     SDL_Texture *start_hovered_txtr = loadimg("menu/start_hovered.bmp",Renderer);
-//     SDL_Rect start_Rect = {700,230+350-75,400,75};
+//     SDL_Rect start_Rect = texture_position(start_txtr,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
 
 //     SDL_Texture *exit_hovered_txtr = loadimg("menu/Exit_hovered.bmp",Renderer);
 //     SDL_Texture *exit_txtr = loadimg("menu/Exit.bmp",Renderer);
-//     SDL_Rect exit_Rect = {700,315+350-75,400,75};
+//     SDL_Rect exit_Rect = texture_position(exit_txtr,TXR_CENTER,565,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
 
-//     if (mouse_pos.x >= 700 && mouse_pos.x <= 1100 && mouse_pos.y >= 505 && mouse_pos.y <= 580)
+//     if ((mouse_pos.x >= WIDTH/2-175 && mouse_pos.x <= WIDTH/2+175 && mouse_pos.y >= HEIGHT/2-20 && mouse_pos.y <= HEIGHT/2+20 ) || selected_option == 1)
 //     {
 //         SDL_RenderCopy(Renderer,start_hovered_txtr,NULL,&start_Rect);
 //     }
-//     else if (mouse_pos.x >= 700 && mouse_pos.x <= 1100 && mouse_pos.y >= 590 && mouse_pos.y <= 665)
+//     else if (mouse_pos.x >= WIDTH/2-175 && mouse_pos.x <= WIDTH/2+175 && mouse_pos.y >= 580 && mouse_pos.y <= 625 || selected_option == 2)
 //     {
 //         SDL_RenderCopy(Renderer,exit_hovered_txtr,NULL,&exit_Rect);
-//         if (mouse_is_down)
+//         if (mouse_is_down || return_is_down)
 //         {
 //             running = 0;
 //         }
@@ -203,30 +244,40 @@
 // _coord center = { .x = 310 , .y = 45};
 // void sound_control(SDL_Renderer *Renderer)
 // {
-//     boxColor(Renderer,20,20,70,70,0xccffffff);
-//     boxColor(Renderer,100,44,310,46,0xccffffff);
-//     boxColor(Renderer,center.x-10,center.y-10,center.x+10,center.y+10,0xff4040aa);
-
-//     if (mouse_pos.x >= 100 && mouse_pos.x <= 310 && mouse_pos.y >= 32 && mouse_pos.y <= 58)
+//     SDL_Texture *sound_texture = loadimg("images/icon/sound_icon.png",Renderer);
+//     SDL_Rect sound_rect = texture_position(sound_texture,25,HEIGHT - 55,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+//     SDL_RenderCopy(Renderer,sound_texture,NULL,&sound_rect);
+//     SDL_DestroyTexture(sound_texture);
+    
+//     boxColor(Renderer,100,44+920,310,46+920,0xccffffff);
+//     boxColor(Renderer,center.x-10,center.y-10+920,center.x+10,center.y+10+920,0xff4040aa);
+//     static int flag = 0;
+//     if (mouse_pos.x >= 100 && mouse_pos.x <= 310 && mouse_pos.y >= 32+920 && mouse_pos.y <= 58+920)
 //     {
-//         rectangleColor(Renderer,center.x-10,center.y-10,center.x+10,center.y+10,0xff9090ff);
-
-//         if(mouse_is_down)
+//         if (mouse_is_down)
 //         {
-//             if (mouse_pos.x >= 310)
-//             {
-//                 center.x = 310;
-//             }
-//             else if (mouse_pos.x <= 100)
-//             {
-//                 center.x = 100;
-//             }
-//             else
-//             {
-//                 center.x = mouse_pos.x;
-//             }            
+//             flag = 1;
 //         }
+        
 //     }
+
+//     if(flag)
+//     {
+//         rectangleColor(Renderer,center.x-10,center.y-10+920,center.x+10,center.y+10+920,0xff9090ff);
+//         if (mouse_pos.x >= 310)
+//         {
+//             center.x = 310;
+//         }
+//         else if (mouse_pos.x <= 100)
+//         {
+//             center.x = 100;
+//         }
+//         else
+//         {
+//             center.x = mouse_pos.x;
+//         }            
+//     }
+//     else if(mouse_is_down == 0 && flag)flag = 0;
 
 //     double percent = (center.x-100)*128/210;
 //     Mix_VolumeMusic(percent);
@@ -264,6 +315,10 @@
 
 //     while(running)
 // 	{
+//         frame++;
+//         if (frame == 2*FPS-1)frame =0;
+        
+//         BKG_texture = dynamic_background(Renderer,BKG_texture);
 //         SDL_RenderCopy(Renderer,BKG_texture,NULL,&BKG_rect);
         
 // 		handling();
