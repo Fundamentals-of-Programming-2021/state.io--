@@ -10,7 +10,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_image.h>
 
-#define FPS 60
+#define FPS 50
 #define TXT_HEADER 0
 #define TXT_HANDWRITE 1
 #define TXT_BODY 2
@@ -40,7 +40,6 @@ bool load_previous = 0;
 typedef struct 
 {
     _coord initstate;
-
 }_player;
 
 typedef struct
@@ -95,7 +94,18 @@ typedef struct
 
 }_soldier;
 
-_soldier soldier[100][1000];
+typedef struct
+{
+    int exp_frame;
+    _double_coord center;
+    bool is_done;   
+
+}_explosion;
+
+int explosion_num = 0;
+_explosion explosion[1000];
+
+_soldier soldier[100][10000];
 
 int sign(int num)
 {
@@ -131,6 +141,7 @@ SDL_Texture *text_texture(SDL_Renderer *Renderer,char* str,int ptrsize,int flag,
     return txtTexture;    
 }
 
+SDL_Texture *Texture;
 SDL_Texture *loadimg(char* file_location,SDL_Renderer *Renderer)
 {
     SDL_Surface *imgsurface = IMG_Load(file_location);
@@ -140,7 +151,7 @@ SDL_Texture *loadimg(char* file_location,SDL_Renderer *Renderer)
         return NULL;
     }
     
-    SDL_Texture *Texture = SDL_CreateTextureFromSurface(Renderer,imgsurface);
+    Texture = SDL_CreateTextureFromSurface(Renderer,imgsurface);
     SDL_FreeSurface(imgsurface);
     return Texture;
 }
@@ -235,28 +246,28 @@ void armory_place(SDL_Renderer* renderer,_double_coord coord, Uint32 color,int p
     SDL_Rect player_icon_rect;
     if (player == 0)
     {
-        player_icon_texture = loadimg("images/player_icon/1.png",renderer);
-        player_icon_rect = texture_position(player_icon_texture,coord.x-18,coord.y-20,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        player_icon_texture = loadimg("images/player_icon/0.png",renderer);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-19,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     }
     else if (player == 1)
     {
-        player_icon_texture = loadimg("images/player_icon/7.png",renderer);
-        player_icon_rect = texture_position(player_icon_texture,coord.x-15,coord.y-40,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
+        player_icon_texture = loadimg("images/player_icon/1.png",renderer);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-14,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
     }
     else if (player == 2)
     {
-        player_icon_texture = loadimg("images/player_icon/8.png",renderer);
-        player_icon_rect = texture_position(player_icon_texture,coord.x-21,coord.y-20,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
+        player_icon_texture = loadimg("images/player_icon/2.png",renderer);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-31,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
     }
     else if (player == 3)
     {
-        player_icon_texture = loadimg("images/player_icon/2.png",renderer);
-        player_icon_rect = texture_position(player_icon_texture,coord.x-6,coord.y-20,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
+        player_icon_texture = loadimg("images/player_icon/3.png",renderer);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-16,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
     }
     else
     {
-        player_icon_texture = loadimg("images/player_icon/5.png",renderer);
-        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-20,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        player_icon_texture = loadimg("images/player_icon/4.png",renderer);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-30,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     }
     SDL_RenderCopy(renderer,player_icon_texture,NULL,&player_icon_rect);
     SDL_DestroyTexture(player_icon_texture);
@@ -322,8 +333,8 @@ void printmap(SDL_Renderer *Renderer,_player player[])
     {
         for (int j = 0; j < STATECOUNT.y; j++)
         {
-            filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x03ffff05);
-            polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x09ffff00);
+            filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x01ffff05);
+            polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x02ffff00);
 
             if (state[i][j].country_num != -1 && state[i][j].avalable)
             {
@@ -404,6 +415,7 @@ void setmap(SDL_Renderer *Renderer,_player player[])
     //sin 22.5 = 0.03827 / cos 22.5 = 0.9239
     //sin 60 = 0.85 / cos60 = 0.5 
     int diameter = 124;
+    _coord for_akhavans_sake = {rand()%10-3,rand()%10-5};
     _double_coord step;
     if (load_previous)
     {
@@ -425,7 +437,8 @@ void setmap(SDL_Renderer *Renderer,_player player[])
                     step.x = WIDTH/2 + ((i-STATECOUNT.x/2) * diameter * 0.75);
                     step.y = HEIGHT/2 + ((j-STATECOUNT.y/2) * diameter *0.85) + diameter/2*0.85;
                 }
-                step.y += 25;
+                step.y += 25 + for_akhavans_sake.y;
+                step.x += for_akhavans_sake.x;
                 sethex(state[i][j].points,step,diameter,&state[i][j].center);    
             }   
         }
@@ -485,39 +498,37 @@ void SetColors(_player player[],int playernum)
     {
         for (int j = 0; j < STATECOUNT.y; j++)
         {
-            country[state[i][j].country_num].color = 0xdd8888ff+ state[i][j].country_num * 0x006655ff;
+            country[state[i][j].country_num].color = 0x88050505+ state[i][j].country_num * 0x00885515;
         }
     }
 }
 
-
-
 _attack_info attacks[150];
-void attack_initializer()
+void attack_initializer(_coord F_state , _coord S_state)
 {
     atc_num ++;
 
     attacks[atc_num].is_done = 0;
-    attacks[atc_num].start_state = F_mouse_state;
-    attacks[atc_num].stop_state = S_mouse_state;
-    attacks[atc_num].soldier_num = country[state[F_mouse_state.x][F_mouse_state.y].country_num].unitcount;
+    attacks[atc_num].start_state = F_state;
+    attacks[atc_num].stop_state = S_state;
+    attacks[atc_num].soldier_num = country[state[F_state.x][F_state.y].country_num].unitcount;
     attacks[atc_num].passed_unit = 0;
 
     for (int i = 0; i < attacks[atc_num].soldier_num; i++)
     {
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].center.x = state[F_mouse_state.x][F_mouse_state.y].center.x;
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].center.y = state[F_mouse_state.x][F_mouse_state.y].center.y;
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].damage = 1;
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].reached = 0;
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].dest = S_mouse_state;
-        soldier[state[F_mouse_state.x][F_mouse_state.y].country_num][i].player = country[state[F_mouse_state.x][F_mouse_state.y].country_num].player;
+        soldier[state[F_state.x][F_state.y].country_num][i].center.x = state[F_state.x][F_state.y].center.x;
+        soldier[state[F_state.x][F_state.y].country_num][i].center.y = state[F_state.x][F_state.y].center.y;
+        soldier[state[F_state.x][F_state.y].country_num][i].damage = 1;
+        soldier[state[F_state.x][F_state.y].country_num][i].reached = 0;
+        soldier[state[F_state.x][F_state.y].country_num][i].dest = S_state;
+        soldier[state[F_state.x][F_state.y].country_num][i].player = country[state[F_state.x][F_state.y].country_num].player;
 
     }
 
-    country[state[F_mouse_state.x][F_mouse_state.y].country_num].passed_unit = 0;
-    country[state[S_mouse_state.x][S_mouse_state.x].country_num].is_under_attack = 0;
-    country[state[F_mouse_state.x][F_mouse_state.y].country_num].unitcount = 0;
-    country[state[S_mouse_state.x][S_mouse_state.y].country_num].is_under_attack =1;
+    country[state[F_state.x][F_state.y].country_num].passed_unit = 0;
+    country[state[S_state.x][S_state.x].country_num].is_under_attack = 0;
+    country[state[F_state.x][F_state.y].country_num].unitcount = 0;
+    country[state[S_state.x][S_state.y].country_num].is_under_attack =1;
 }
 
 void handling(SDL_Renderer *renderer)
@@ -549,13 +560,39 @@ void handling(SDL_Renderer *renderer)
             if(event.button.button == SDL_BUTTON_LEFT)
             {
                 mouse_is_down = 0;
-                if ((S_mouse_state.x != F_mouse_state.x || S_mouse_state.y != F_mouse_state.y) && state[F_mouse_state.x][F_mouse_state.y].avalable && state[S_mouse_state.x][S_mouse_state.y].avalable && country[state[F_mouse_state.x][F_mouse_state.y].country_num].passed_unit == 0 && country[state[F_mouse_state.x][F_mouse_state.y].country_num].player != -1)
-                {      
-                    attack_initializer();
+                if ((S_mouse_state.x != F_mouse_state.x || S_mouse_state.y != F_mouse_state.y) && state[F_mouse_state.x][F_mouse_state.y].avalable && state[S_mouse_state.x][S_mouse_state.y].avalable && country[state[F_mouse_state.x][F_mouse_state.y].country_num].passed_unit == 0 && country[state[F_mouse_state.x][F_mouse_state.y].country_num].player == 0)
+                {
+                    Mix_Chunk *yes_chunk = Mix_LoadWAV("music/yes.wav");
+                    Mix_PlayChannel(0,yes_chunk,0);
+                    attack_initializer(F_mouse_state,S_mouse_state);
                 }
             }
         }
 	}
+}
+
+SDL_Texture *mouse_texture;
+void mouse_cursor(SDL_Renderer *Renderer,bool attack_mouse)
+{
+    if (attack_mouse)
+    {
+        mouse_texture = loadimg("images/cursor/cursor 2.png",Renderer);
+    }
+    else
+    {
+        if (mouse_is_down)
+        {
+            mouse_texture = loadimg("images/cursor/cursor 3.png",Renderer);
+        }
+        else
+        {
+            mouse_texture = loadimg("images/cursor/cursor 1.png",Renderer);
+        }
+    }
+    
+    
+    SDL_Rect mouse_rect = texture_position(mouse_texture,mouse_pos.x,mouse_pos.y,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+    SDL_RenderCopy(Renderer,mouse_texture,NULL,&mouse_rect);
 }
 
 int colission_detect(_double_coord obj,_double_coord dest,int diameter)
@@ -588,6 +625,12 @@ void initializer(SDL_Renderer *Renderer,_player player[])
             state[i][j].is_capital = 0;
         }
     }
+    for (int i = 0; i < 1000; i++)
+    {
+        explosion[i].is_done = 1;
+        explosion[i].exp_frame = 0;
+    }
+    
 }
 
 void solder_increasing(time_t time)
@@ -600,7 +643,8 @@ void solder_increasing(time_t time)
        {
             if (country[i].unitcount < 75 && !country[i].is_under_attack && country[i].player != -1 )
             {
-                country[i].unitcount+= 1;
+                if(country[i].player == 0)country[i].unitcount += 2;
+                else country[i].unitcount+= 1;
             }                
        }
     }
@@ -621,7 +665,7 @@ void shift_attack(int num)
 void attack_check()
 {
     int temp = 0;
-    for (int i = 0; i < atc_num; i++)
+    for (int i = 1; i < atc_num; i++)
     {
         if (attacks[i].is_done == 1)
         {
@@ -635,6 +679,25 @@ void attack_check()
 
 void selected_state(SDL_Renderer *Renderer)
 {
+    if (F_mouse_state.x != -1 && F_mouse_state.y != -1 && mouse_is_down && country[state[F_mouse_state.x][F_mouse_state.y].country_num].player == 0)
+    {
+        if (state[F_mouse_state.x][F_mouse_state.y].avalable && state[F_mouse_state.x][F_mouse_state.y].country_num != -1)
+        {
+            for (int i = 0; i < STATECOUNT.x; i++)
+            {
+                for (int j = 0; j < STATECOUNT.y; j++)
+                {
+                    if (state[i][j].country_num == state[F_mouse_state.x][F_mouse_state.y].country_num)
+                    {
+                        filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x300505ff);
+                        polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0xff0515ff);
+                    }
+                }
+                
+            } 
+        }
+    }
+
     if (S_mouse_state.x != -1 && S_mouse_state.y != -1)
     {
         if (state[S_mouse_state.x][S_mouse_state.y].avalable && state[S_mouse_state.x][S_mouse_state.y].country_num != -1)
@@ -645,8 +708,8 @@ void selected_state(SDL_Renderer *Renderer)
                 {
                     if (state[i][j].country_num == state[S_mouse_state.x][S_mouse_state.y].country_num)
                     {
-                        filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x10ffffff);
-                        polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0xffffffff);
+                        filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x1000ffff);
+                        polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0xff00fff2);
                     }
                 }
                 
@@ -655,12 +718,13 @@ void selected_state(SDL_Renderer *Renderer)
     }
 }
 
-void print_dynamic_line(SDL_Renderer *Renderer)
+int print_dynamic_line()
 {
     if (mouse_is_down && state[F_mouse_state.x][F_mouse_state.y].avalable && state[F_mouse_state.x][F_mouse_state.y].country_num != -1  && country[state[F_mouse_state.x][F_mouse_state.y].country_num].player != -1 && state[S_mouse_state.x][S_mouse_state.y].country_num != -1 && state[S_mouse_state.x][S_mouse_state.y].avalable)
     {
-        lineRGBA(Renderer,state[F_mouse_state.x][F_mouse_state.y].center.x,state[F_mouse_state.x][F_mouse_state.y].center.y,mouse_pos.x,mouse_pos.y,0,160,200,255);
+        return 1;
     }
+    return 0;
 }
 
 int reach_check(int cntry_num,int count)
@@ -679,12 +743,20 @@ int soldier_faced(int cntry_num,int sold_num,_coord *res)
 {
     for (int i = 0; i <= country_count; i++)
     {
-        if (country[i].player != soldier[cntry_num][sold_num].player && country[i].passed_unit > 0)
+        if (soldier[i][0].player != soldier[cntry_num][sold_num].player && country[i].passed_unit > 0)
         {
             for (int m = 0; m < country[i].passed_unit; m++)
             {
-                if (colission_detect(soldier[i][m].center,soldier[cntry_num][sold_num].center,13))
+                if (colission_detect(soldier[i][m].center,soldier[cntry_num][sold_num].center,25) && soldier[i][m].damage && soldier[cntry_num][sold_num].damage)
                 {
+                    explosion[explosion_num].center.x = (soldier[i][m].center.x+soldier[cntry_num][sold_num].center.x)/2;
+                    explosion[explosion_num].center.y = (soldier[i][m].center.y+soldier[cntry_num][sold_num].center.y)/2;
+                    explosion[explosion_num].exp_frame = 0;
+                    explosion[explosion_num].is_done = 0;
+                    explosion_num ++;
+
+                    Mix_Chunk *bubble_chunk = Mix_LoadWAV("music/bubble.wav");
+                    Mix_PlayChannel(-1,bubble_chunk,0); 
                     res->x = i;
                     res->y = m;
                     return 1;
@@ -750,13 +822,14 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
     
     //just for less typing 
     _coord res;
-
+    SDL_Texture *soldier_texture = loadimg(soldier_path,Renderer);
     for (int i = 0; i < attacks[Attack_num].passed_unit ; i++)
     {
         soldier_path[15] = (char)soldier[state[F_state.x][F_state.y].country_num][i].player + '1';
 
         if (soldier_faced(state[F_state.x][F_state.y].country_num,i,&res))
         {
+            
             soldier[state[F_state.x][F_state.y].country_num][i].damage = 0;
             soldier[res.x][res.y].center = state[soldier[res.x][res.y].dest.x][soldier[res.x][res.y].dest.y].center;
             soldier[res.x][res.y].damage = 0;
@@ -766,8 +839,8 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
         }
         if (!colission_detect(soldier[state[F_state.x][F_state.y].country_num][i].center,state[S_state.x][S_state.y].center,30))
         {
-            soldier[state[F_state.x][F_state.y].country_num][i].center.y +=  10*speed.y;
-            soldier[state[F_state.x][F_state.y].country_num][i].center.x +=  10*speed.x;
+            soldier[state[F_state.x][F_state.y].country_num][i].center.y +=  8*speed.y;
+            soldier[state[F_state.x][F_state.y].country_num][i].center.x +=  8*speed.x;
         }
         else
         {
@@ -775,10 +848,9 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
         }
         if (!soldier[state[F_state.x][F_state.y].country_num][i].reached && soldier[state[F_state.x][F_state.y].country_num][i].damage)
         {
-            SDL_Texture *soldier_texture = loadimg(soldier_path,Renderer);
+            soldier_texture = loadimg(soldier_path,Renderer);
             SDL_Rect soldier_rect = texture_position(soldier_texture,soldier[state[F_state.x][F_state.y].country_num][i].center.x-30,soldier[state[F_state.x][F_state.y].country_num][i].center.y-30,60,60);
             SDL_RenderCopy(Renderer,soldier_texture,NULL,&soldier_rect);
-            SDL_DestroyTexture(soldier_texture);
         }
         else if(soldier[state[F_state.x][F_state.y].country_num][i].reached && soldier[state[F_state.x][F_state.y].country_num][i].damage)
         {
@@ -800,7 +872,7 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
         }        
     }
 
-    if (attacks[Attack_num].passed_unit != number && frame % 5 == 0)
+    if (attacks[Attack_num].passed_unit != number && frame % 7 == 0)
     {
         attacks[Attack_num].passed_unit++;
         country[state[F_state.x][F_state.y].country_num].passed_unit++;
@@ -812,7 +884,7 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
         country[state[S_state.x][S_state.y].country_num].is_under_attack = 0;
         country[state[F_state.x][F_state.y].country_num].passed_unit = 0;
     }
-    
+    SDL_DestroyTexture(soldier_texture);
 }
 
 void show_help_message(SDL_Renderer *Renderer)
@@ -821,7 +893,7 @@ void show_help_message(SDL_Renderer *Renderer)
     SDL_Rect text_rect = texture_position(TXT_texture,WIDTH/2-60,10,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     SDL_RenderCopy(Renderer,TXT_texture,NULL,&text_rect);
     SDL_DestroyTexture(TXT_texture);
-    SDL_Texture *icon_texture = loadimg("images/player_icon/1.png",Renderer);
+    SDL_Texture *icon_texture = loadimg("images/player_icon/0.png",Renderer);
     SDL_Rect icon_rect = texture_position(icon_texture,WIDTH/2 + 60,0,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     SDL_RenderCopy(Renderer,icon_texture,NULL,&icon_rect);
     SDL_DestroyTexture(icon_texture);
@@ -829,30 +901,81 @@ void show_help_message(SDL_Renderer *Renderer)
 
 int is_game_running()
 {
+    int k= 0;        
+    while (country[k].player == -1)k++;
+
     for (int i = 0; i < country_count; i++)
-    {
-        if (country[i].player != country[1].player)
+    {   
+        if (country[i].player != -1)
         {
-            return 1;
+            if (country[i].player != country[k].player)
+            {
+                return 1;
+            }
         }
     }
     return 0;
     
 }
 
+bool play = 1;
 void end_game(SDL_Renderer *Renderer)
-{
+{   
     if (!is_game_running())
     {
+        Mix_Chunk *end_soundEffect;
+        SDL_Texture *texture;
+        SDL_Rect rect;
+
+        
+        int k= 0;        
+        while (country[k].player != -1)k++;
+        
+        if (country[k].player != 0 && country[k].player != -1)
+        {
+            end_soundEffect = Mix_LoadWAV("music/loose.wav");
+            texture = text_texture(Renderer,"you loose !",100,TXT_HEADER,255,255,255,255);
+
+        }
+        else
+        {
+            end_soundEffect = Mix_LoadWAV("music/win.wav");
+            texture = text_texture(Renderer,"you won !",100,TXT_HEADER,255,255,255,255);
+
+        }
+
+        if (play)
+        {
+            Mix_PlayChannel(0,end_soundEffect,0);
+            play = 0;
+        }
+        if (!Mix_Playing(0))
+        {
+            Mix_FreeChunk(end_soundEffect);
+        }
+        
+
         boxColor(Renderer,0,0,WIDTH,HEIGHT,0xef010101);
-        SDL_Texture *winner_message_texture = text_texture(Renderer,"winner is :",100,TXT_HEADER,255,255,255,255);
-        SDL_Rect winner_message_rect = texture_position(winner_message_texture,WIDTH/2-320,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
-        SDL_RenderCopy(Renderer,winner_message_texture,NULL,&winner_message_rect);
-        SDL_DestroyTexture(winner_message_texture);
-        SDL_Texture *winner_icon_texture = loadimg("images/player_icon/9.png",Renderer);
-        winner_message_rect = texture_position(winner_icon_texture,WIDTH-200,HEIGHT/2-100,150,200);
-        SDL_RenderCopy(Renderer,winner_icon_texture,NULL,&winner_message_rect);
-        SDL_DestroyTexture(winner_icon_texture);
+        rectangleColor(Renderer,380,850,680,950,0xffffffff);
+        rect = texture_position(texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        SDL_RenderCopy(Renderer,texture,NULL,&rect);
+
+        texture = loadimg("menu/back.png",Renderer);
+
+        if (mouse_pos.x >= 380 && mouse_pos.x <= 680 && mouse_pos.y >= 850 && mouse_pos.y <= 950)
+        {
+            texture = loadimg("menu/back_hovered.png",Renderer);
+            
+            if (mouse_is_down)
+            {
+                running = 0;
+            }
+        }
+        rect = texture_position(texture,380,850,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        SDL_RenderCopy(Renderer,texture,NULL,&rect);
+        
+        
+        SDL_DestroyTexture(texture);
     
     }    
 }
@@ -903,6 +1026,70 @@ void light_background(int frame,SDL_Renderer *Renderer)
     boxColor(Renderer,0,0,WIDTH,HEIGHT,color);
 }
 
+void shift_explosion(int num)
+{
+    for (int i = 0; i < explosion_num; i++)
+    {
+        explosion[i] = explosion[i+num];
+    }
+}
+
+void show_explosion(SDL_Renderer *Renderer,int exp_num)
+{   
+    if (explosion[exp_num].exp_frame == 4)
+    {
+        explosion[exp_num].is_done = 1;
+        return;
+    }
+    explosion[exp_num].exp_frame ++;
+    
+    SDL_Rect explosion_src_rect;
+    SDL_Rect explosion_dst_rect;
+    SDL_Texture *explosion_texture;
+    explosion_texture = loadimg("images/explosion/3.png",Renderer);
+    explosion_src_rect.x = (explosion[exp_num].exp_frame%4)*200 ; explosion_src_rect.y = (explosion[exp_num].exp_frame/4+1)*100 ,explosion_src_rect.w = 100;explosion_src_rect .h = 100;
+    explosion_dst_rect.x = explosion[exp_num].center.x-40 ; explosion_dst_rect.y = explosion[exp_num].center.y-40 ; explosion_dst_rect.w = 80 ; explosion_dst_rect.h = 80;
+    SDL_RenderCopy(Renderer,explosion_texture,&explosion_src_rect,&explosion_dst_rect);
+    SDL_DestroyTexture(explosion_texture);
+
+}
+
+void explosion_check()
+{
+    int temp = 0;
+    for (int i = 0; i < explosion_num; i++)
+    {
+        if (explosion[i].is_done == 1)
+        {
+            temp++;
+        }
+    }
+    shift_explosion(temp);
+    explosion_num -= temp;
+    
+}
+
+//the most simplest AI in the world
+void AI()
+{
+    for (int i = 1; i < 4; i++)
+    {
+        for (int j = rand()%country_count; j < country_count; j++)
+        {
+            if (country[j].player == i && country[j].passed_unit == 0)
+            {
+                for (int l = rand()%country_count; l < country_count; l++)
+                {
+                    if (is_game_running() && country[l].player != i && country[j].unitcount >= country[l].unitcount && country[j].unitcount > 10)
+                    {
+                        attack_initializer(country[j].capital,country[l].capital);
+                    }
+                }
+            }
+        }
+    }
+}
+
 int main() {
 
     srand(time(NULL)*1000);
@@ -913,13 +1100,14 @@ int main() {
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
     
     TTF_Init();
-    Mix_Init(MIX_INIT_MP3 | MIX_INIT_FLAC);
+    Mix_Init(MIX_INIT_MP3);
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 	SDL_Window *window = SDL_CreateWindow("state.io", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,WIDTH,
     HEIGHT, SDL_WINDOW_OPENGL);
 
     SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     
+    Mix_Music *playground_music = Mix_LoadMUS("music/play ground.mp3");
     initializer(Renderer,player);
     setmap(Renderer,player);
     SetColors(player,player_count);
@@ -928,7 +1116,9 @@ int main() {
     SDL_Rect bkg_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
         
 	time_t starting_time = time(NULL);
-    
+    Mix_PlayMusic(playground_music,-1);
+    SDL_ShowCursor(0);
+    Mix_VolumeMusic(50); 
     while(running)
 	{
         
@@ -938,38 +1128,47 @@ int main() {
         show_help_message(Renderer);
 
         frame ++;
-        if(frame == 2*FPS-1)frame = 0;
+        if(frame == 8*FPS-1)frame = 0;
 
         for (int i = 1; i <= atc_num; i++)
         {
             print_soldier(Renderer,attacks[i].start_state,attacks[i].stop_state,attacks[i].soldier_num,i);
         }
         
-        for (int i = 1; i <= atc_num; i++)
+        attack_check();
+
+        for (int i = 0; i < explosion_num; i++)
         {
-            attack_check();
+            show_explosion(Renderer,i);
         }
+
+        explosion_check();
+        
+        if (frame % (rand()%120+1) == 0)
+        {
+            AI();
+        } 
         
         
         time_t current_time = time(NULL);
 
-        print_text(Renderer,2,(int)(current_time - starting_time),"time passd:",10,10);
         
         if (frame % 20 == 0)
         {
             solder_increasing(current_time - starting_time);
         }
         
-        print_dynamic_line(Renderer);
         selected_state(Renderer);
 
 		handling(Renderer);
         end_game(Renderer);
-       
+        mouse_cursor(Renderer,print_dynamic_line());
         SDL_RenderPresent(Renderer);
 		SDL_Delay(1000/FPS);
         SDL_RenderClear(Renderer);
 	}
+    SDL_DestroyTexture(mouse_texture);
+    Mix_FreeMusic(playground_music);
     update_leaderboard();
     save_game();
     SDL_DestroyWindow(window);
