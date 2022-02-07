@@ -153,9 +153,7 @@
 //             {
 //                 return_is_down =1;
 //             }
-            
 //         }
-        
 // 	}
 // }
 
@@ -280,11 +278,10 @@
 //     else if(mouse_is_down == 0 && flag)flag = 0;
 
 //     double percent = (center.x-100)*128/210;
-//     Mix_VolumeMusic(percent);
-    
+//     Mix_VolumeMusic(percent); 
 // }
 
-// int main()
+// void main_first_page(SDL_Renderer *Renderer)
 // {
 //     SDL_Window *window = NULL;
 //     SDL_Renderer *Renderer = NULL;

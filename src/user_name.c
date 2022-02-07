@@ -209,105 +209,105 @@
     
 // }
 
-// void show_options(SDL_Renderer *Renderer)
-// {
-//     rectangleColor(Renderer,20,650,320,750,0xffffffff);
-//     rectangleColor(Renderer,380,650,680,750,0xffffffff);
-//     // rectangleColor(Renderer,200,780,500,880,0xffffffff);
-//     SDL_Texture *options_texture;
-//     SDL_Rect options_rect;
-//     if (mouse_pos.x >= 20 && mouse_pos.y >= 650 && mouse_pos.x <= 320 && mouse_pos.y <= 750)
-//     {
-//         options_texture = loadimg("menu/new game_hovered.png",Renderer);
-//     }
-//     else
-//     {
-//         options_texture = loadimg("menu/new game.png",Renderer);
-//     }
-//     options_rect = texture_position(options_texture,20,650,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);    
-//     SDL_RenderCopy(Renderer,options_texture,NULL,&options_rect);
+// // void show_options(SDL_Renderer *Renderer)
+// // {
+// //     rectangleColor(Renderer,20,650,320,750,0xffffffff);
+// //     rectangleColor(Renderer,380,650,680,750,0xffffffff);
+// //     // rectangleColor(Renderer,200,780,500,880,0xffffffff);
+// //     SDL_Texture *options_texture;
+// //     SDL_Rect options_rect;
+// //     if (mouse_pos.x >= 20 && mouse_pos.y >= 650 && mouse_pos.x <= 320 && mouse_pos.y <= 750)
+// //     {
+// //         options_texture = loadimg("menu/new game_hovered.png",Renderer);
+// //     }
+// //     else
+// //     {
+// //         options_texture = loadimg("menu/new game.png",Renderer);
+// //     }
+// //     options_rect = texture_position(options_texture,20,650,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);    
+// //     SDL_RenderCopy(Renderer,options_texture,NULL,&options_rect);
     
-//     if (mouse_pos.x >= 380 && mouse_pos.y >= 650 && mouse_pos.x <= 680 && mouse_pos.y <= 750)
-//     {
-//         options_texture = loadimg("menu/load game_hovered.png",Renderer);
-//     }
-//     else
-//     {
-//         options_texture = loadimg("menu/load game.png",Renderer);
-//     }
+// //     if (mouse_pos.x >= 380 && mouse_pos.y >= 650 && mouse_pos.x <= 680 && mouse_pos.y <= 750)
+// //     {
+// //         options_texture = loadimg("menu/load game_hovered.png",Renderer);
+// //     }
+// //     else
+// //     {
+// //         options_texture = loadimg("menu/load game.png",Renderer);
+// //     }
 
-//     options_rect = texture_position(options_texture,380,650,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
-//     SDL_RenderCopy(Renderer,options_texture,NULL,&options_rect);
+// //     options_rect = texture_position(options_texture,380,650,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+// //     SDL_RenderCopy(Renderer,options_texture,NULL,&options_rect);
     
-//     SDL_DestroyTexture(options_texture);
+// //     SDL_DestroyTexture(options_texture);
 
-// }
+// // }
 
-// int main()
-// {
-//     SDL_Window *window = NULL;
-//     SDL_Renderer *Renderer = NULL;
-//     srand(time(NULL)*1000);
+// // int main()
+// // {
+// //     SDL_Window *window = NULL;
+// //     SDL_Renderer *Renderer = NULL;
+// //     srand(time(NULL)*1000);
     
-//     SDL_Init(SDL_INIT_VIDEO);
+// //     SDL_Init(SDL_INIT_VIDEO);
 
-// 	window = SDL_CreateWindow("state.io", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,WIDTH,
-//     HEIGHT, SDL_WINDOW_OPENGL);
+// // 	window = SDL_CreateWindow("state.io", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,WIDTH,
+// //     HEIGHT, SDL_WINDOW_OPENGL);
 
-//     Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-//     TTF_Init();
-//     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+// //     Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+// //     TTF_Init();
+// //     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
-// 	SDL_StartTextInput();
-//     SDL_SetRenderDrawColor(Renderer,0,0,0,0);
+// // 	SDL_StartTextInput();
+// //     SDL_SetRenderDrawColor(Renderer,0,0,0,0);
     
-//     SDL_Texture *BKG_texture = loadimg(BKG_PATH , Renderer);
-//     SDL_Rect BKG_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+// //     SDL_Texture *BKG_texture = loadimg(BKG_PATH , Renderer);
+// //     SDL_Rect BKG_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
 
     
-//     SDL_Rect userTXT_rect;
-//     SDL_Texture *userTXT_texture;
+// //     SDL_Rect userTXT_rect;
+// //     SDL_Texture *userTXT_texture;
     
-//     SDL_Texture *message_texture = text_texture(Renderer,"please ENTER username :",60,TXT_HEADER,255,255,255,150);
-//     SDL_Rect messsage_rect = texture_position(message_texture,TXR_CENTER,350,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+// //     SDL_Texture *message_texture = text_texture(Renderer,"please ENTER username :",60,TXT_HEADER,255,255,255,150);
+// //     SDL_Rect messsage_rect = texture_position(message_texture,TXR_CENTER,350,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     
-//     while(running)
-// 	{
-//         frame++;
-//         if (frame == 2*FPS-1) frame = 0;
+// //     while(running)
+// // 	{
+// //         frame++;
+// //         if (frame == 2*FPS-1) frame = 0;
 
 
-//         BKG_texture = dynamic_background(Renderer,BKG_texture);
+// //         BKG_texture = dynamic_background(Renderer,BKG_texture);
         
-//         SDL_RenderCopy(Renderer,BKG_texture,NULL,&BKG_rect);
-//         sound_control(Renderer);
+// //         SDL_RenderCopy(Renderer,BKG_texture,NULL,&BKG_rect);
+// //         sound_control(Renderer);
 
-//         boxColor(Renderer,100,474,600,476,0x332288aa);
-//         boxColor(Renderer,100,574,600,576,0x332288aa);
-//         userTXT_texture = text_texture(Renderer,user_name,50,TXT_BODY,255,255,255,255);
-//         userTXT_rect = texture_position(userTXT_texture,TXR_CENTER,500,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+// //         boxColor(Renderer,100,474,600,476,0x332288aa);
+// //         boxColor(Renderer,100,574,600,576,0x332288aa);
+// //         userTXT_texture = text_texture(Renderer,user_name,50,TXT_BODY,255,255,255,255);
+// //         userTXT_rect = texture_position(userTXT_texture,TXR_CENTER,500,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
         
-//         show_options(Renderer);
-// 		handling();
+// //         show_options(Renderer);
+// // 		handling();
 
-//         SDL_RenderCopy(Renderer,message_texture,NULL,&messsage_rect);
-//         SDL_RenderCopy(Renderer,userTXT_texture,NULL,&userTXT_rect);
+// //         SDL_RenderCopy(Renderer,message_texture,NULL,&messsage_rect);
+// //         SDL_RenderCopy(Renderer,userTXT_texture,NULL,&userTXT_rect);
         
-//         SDL_RenderPresent(Renderer);
-// 		SDL_Delay(1000/FPS); 
-//         SDL_DestroyTexture(userTXT_texture);
-//         SDL_RenderClear(Renderer);
+// //         SDL_RenderPresent(Renderer);
+// // 		SDL_Delay(1000/FPS); 
+// //         SDL_DestroyTexture(userTXT_texture);
+// //         SDL_RenderClear(Renderer);
 
-// 	}
-//     IMG_Quit();
-//     SDL_DestroyTexture(message_texture);
-//     SDL_DestroyTexture(BKG_texture);
-//     BKG_texture = NULL;
-//     SDL_StopTextInput();
-//     SDL_DestroyWindow(window);
-//     SDL_DestroyRenderer(Renderer);
-//     TTF_Quit();
-//     SDL_Quit();
+// // 	}
+// //     IMG_Quit();
+// //     SDL_DestroyTexture(message_texture);
+// //     SDL_DestroyTexture(BKG_texture);
+// //     BKG_texture = NULL;
+// //     SDL_StopTextInput();
+// //     SDL_DestroyWindow(window);
+// //     SDL_DestroyRenderer(Renderer);
+// //     TTF_Quit();
+// //     SDL_Quit();
 
-//     return 0;
-// }
+// //     return 0;
+// // }

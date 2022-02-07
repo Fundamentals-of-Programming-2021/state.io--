@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "stdbool.h": "c",
+        "stdlib.h": "c",
+        "sdl2_gfxprimitives.h": "c",
+        "sdl_mixer.h": "c",
+        "save_load_scoreboard.c": "cpp",
+        "state_io.h": "c",
+        "sdl_image.h": "c",
+        "time.h": "c"
+    }
+}

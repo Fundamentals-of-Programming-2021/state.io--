@@ -26,7 +26,7 @@
 // const int HEIGHT = 1000;
 // char user_name[25];
 // int frame = 0;
-// int map_num = -1;
+
 // typedef struct
 // {
 //     Sint16 x;
