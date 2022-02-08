@@ -123,6 +123,33 @@ state/fast:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/build
 .PHONY : state/fast
 
+src/attack.o: src/attack.c.o
+
+.PHONY : src/attack.o
+
+# target to build an object file
+src/attack.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/attack.c.o
+.PHONY : src/attack.c.o
+
+src/attack.i: src/attack.c.i
+
+.PHONY : src/attack.i
+
+# target to preprocess a source file
+src/attack.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/attack.c.i
+.PHONY : src/attack.c.i
+
+src/attack.s: src/attack.c.s
+
+.PHONY : src/attack.s
+
+# target to generate assembly for a file
+src/attack.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/attack.c.s
+.PHONY : src/attack.c.s
+
 src/first-page.o: src/first-page.c.o
 
 .PHONY : src/first-page.o
@@ -149,6 +176,60 @@ src/first-page.s: src/first-page.c.s
 src/first-page.c.s:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first-page.c.s
 .PHONY : src/first-page.c.s
+
+src/first_menu.o: src/first_menu.c.o
+
+.PHONY : src/first_menu.o
+
+# target to build an object file
+src/first_menu.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first_menu.c.o
+.PHONY : src/first_menu.c.o
+
+src/first_menu.i: src/first_menu.c.i
+
+.PHONY : src/first_menu.i
+
+# target to preprocess a source file
+src/first_menu.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first_menu.c.i
+.PHONY : src/first_menu.c.i
+
+src/first_menu.s: src/first_menu.c.s
+
+.PHONY : src/first_menu.s
+
+# target to generate assembly for a file
+src/first_menu.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/first_menu.c.s
+.PHONY : src/first_menu.c.s
+
+src/handle_events.o: src/handle_events.c.o
+
+.PHONY : src/handle_events.o
+
+# target to build an object file
+src/handle_events.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/handle_events.c.o
+.PHONY : src/handle_events.c.o
+
+src/handle_events.i: src/handle_events.c.i
+
+.PHONY : src/handle_events.i
+
+# target to preprocess a source file
+src/handle_events.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/handle_events.c.i
+.PHONY : src/handle_events.c.i
+
+src/handle_events.s: src/handle_events.c.s
+
+.PHONY : src/handle_events.s
+
+# target to generate assembly for a file
+src/handle_events.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/handle_events.c.s
+.PHONY : src/handle_events.c.s
 
 src/main-map.o: src/main-map.c.o
 
@@ -204,6 +285,225 @@ src/main.c.s:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/map.o: src/map.c.o
+
+.PHONY : src/map.o
+
+# target to build an object file
+src/map.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/map.c.o
+.PHONY : src/map.c.o
+
+src/map.i: src/map.c.i
+
+.PHONY : src/map.i
+
+# target to preprocess a source file
+src/map.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/map.c.i
+.PHONY : src/map.c.i
+
+src/map.s: src/map.c.s
+
+.PHONY : src/map.s
+
+# target to generate assembly for a file
+src/map.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/map.c.s
+.PHONY : src/map.c.s
+
+src/mouse.o: src/mouse.c.o
+
+.PHONY : src/mouse.o
+
+# target to build an object file
+src/mouse.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/mouse.c.o
+.PHONY : src/mouse.c.o
+
+src/mouse.i: src/mouse.c.i
+
+.PHONY : src/mouse.i
+
+# target to preprocess a source file
+src/mouse.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/mouse.c.i
+.PHONY : src/mouse.c.i
+
+src/mouse.s: src/mouse.c.s
+
+.PHONY : src/mouse.s
+
+# target to generate assembly for a file
+src/mouse.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/mouse.c.s
+.PHONY : src/mouse.c.s
+
+src/other.o: src/other.c.o
+
+.PHONY : src/other.o
+
+# target to build an object file
+src/other.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/other.c.o
+.PHONY : src/other.c.o
+
+src/other.i: src/other.c.i
+
+.PHONY : src/other.i
+
+# target to preprocess a source file
+src/other.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/other.c.i
+.PHONY : src/other.c.i
+
+src/other.s: src/other.c.s
+
+.PHONY : src/other.s
+
+# target to generate assembly for a file
+src/other.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/other.c.s
+.PHONY : src/other.c.s
+
+src/potion.o: src/potion.c.o
+
+.PHONY : src/potion.o
+
+# target to build an object file
+src/potion.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/potion.c.o
+.PHONY : src/potion.c.o
+
+src/potion.i: src/potion.c.i
+
+.PHONY : src/potion.i
+
+# target to preprocess a source file
+src/potion.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/potion.c.i
+.PHONY : src/potion.c.i
+
+src/potion.s: src/potion.c.s
+
+.PHONY : src/potion.s
+
+# target to generate assembly for a file
+src/potion.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/potion.c.s
+.PHONY : src/potion.c.s
+
+src/save_load_scoreboard.o: src/save_load_scoreboard.c.o
+
+.PHONY : src/save_load_scoreboard.o
+
+# target to build an object file
+src/save_load_scoreboard.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/save_load_scoreboard.c.o
+.PHONY : src/save_load_scoreboard.c.o
+
+src/save_load_scoreboard.i: src/save_load_scoreboard.c.i
+
+.PHONY : src/save_load_scoreboard.i
+
+# target to preprocess a source file
+src/save_load_scoreboard.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/save_load_scoreboard.c.i
+.PHONY : src/save_load_scoreboard.c.i
+
+src/save_load_scoreboard.s: src/save_load_scoreboard.c.s
+
+.PHONY : src/save_load_scoreboard.s
+
+# target to generate assembly for a file
+src/save_load_scoreboard.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/save_load_scoreboard.c.s
+.PHONY : src/save_load_scoreboard.c.s
+
+src/select_map.o: src/select_map.c.o
+
+.PHONY : src/select_map.o
+
+# target to build an object file
+src/select_map.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.o
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.o
+.PHONY : src/select_map.c.o
+
+src/select_map.i: src/select_map.c.i
+
+.PHONY : src/select_map.i
+
+# target to preprocess a source file
+src/select_map.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.i
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.i
+.PHONY : src/select_map.c.i
+
+src/select_map.s: src/select_map.c.s
+
+.PHONY : src/select_map.s
+
+# target to generate assembly for a file
+src/select_map.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.s
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/select_map.c.s
+.PHONY : src/select_map.c.s
+
+src/text_input.o: src/text_input.c.o
+
+.PHONY : src/text_input.o
+
+# target to build an object file
+src/text_input.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/text_input.c.o
+.PHONY : src/text_input.c.o
+
+src/text_input.i: src/text_input.c.i
+
+.PHONY : src/text_input.i
+
+# target to preprocess a source file
+src/text_input.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/text_input.c.i
+.PHONY : src/text_input.c.i
+
+src/text_input.s: src/text_input.c.s
+
+.PHONY : src/text_input.s
+
+# target to generate assembly for a file
+src/text_input.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/text_input.c.s
+.PHONY : src/text_input.c.s
+
+src/texture_functions.o: src/texture_functions.c.o
+
+.PHONY : src/texture_functions.o
+
+# target to build an object file
+src/texture_functions.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/texture_functions.c.o
+.PHONY : src/texture_functions.c.o
+
+src/texture_functions.i: src/texture_functions.c.i
+
+.PHONY : src/texture_functions.i
+
+# target to preprocess a source file
+src/texture_functions.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/texture_functions.c.i
+.PHONY : src/texture_functions.c.i
+
+src/texture_functions.s: src/texture_functions.c.s
+
+.PHONY : src/texture_functions.s
+
+# target to generate assembly for a file
+src/texture_functions.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/texture_functions.c.s
+.PHONY : src/texture_functions.c.s
+
 src/user_name.o: src/user_name.c.o
 
 .PHONY : src/user_name.o
@@ -240,15 +540,48 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... state"
+	@echo "... src/attack.o"
+	@echo "... src/attack.i"
+	@echo "... src/attack.s"
 	@echo "... src/first-page.o"
 	@echo "... src/first-page.i"
 	@echo "... src/first-page.s"
+	@echo "... src/first_menu.o"
+	@echo "... src/first_menu.i"
+	@echo "... src/first_menu.s"
+	@echo "... src/handle_events.o"
+	@echo "... src/handle_events.i"
+	@echo "... src/handle_events.s"
 	@echo "... src/main-map.o"
 	@echo "... src/main-map.i"
 	@echo "... src/main-map.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/map.o"
+	@echo "... src/map.i"
+	@echo "... src/map.s"
+	@echo "... src/mouse.o"
+	@echo "... src/mouse.i"
+	@echo "... src/mouse.s"
+	@echo "... src/other.o"
+	@echo "... src/other.i"
+	@echo "... src/other.s"
+	@echo "... src/potion.o"
+	@echo "... src/potion.i"
+	@echo "... src/potion.s"
+	@echo "... src/save_load_scoreboard.o"
+	@echo "... src/save_load_scoreboard.i"
+	@echo "... src/save_load_scoreboard.s"
+	@echo "... src/select_map.o"
+	@echo "... src/select_map.i"
+	@echo "... src/select_map.s"
+	@echo "... src/text_input.o"
+	@echo "... src/text_input.i"
+	@echo "... src/text_input.s"
+	@echo "... src/texture_functions.o"
+	@echo "... src/texture_functions.i"
+	@echo "... src/texture_functions.s"
 	@echo "... src/user_name.o"
 	@echo "... src/user_name.i"
 	@echo "... src/user_name.s"

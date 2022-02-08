@@ -1,23 +1,40 @@
-vi : 200
+yavar : 0
+amir : 44 -24
+
+dar : 0
+poorya : 0
 amir.h.rnn : 1000
-king : 0
-pheonix : 39
-vander : 475
-jinx : 50
-caitlyn : 100
 jayce : 60
 vector : 90
-amir : 32
-
-amir : 117
+amir : 32 480 200 -100
+night : 100 -50 42
+z : 0 -100
+ : 136
  : 0
-z : 0
-z : 75
-amir rnn : 217
-z : 16
-z : 8
-z : 28
-z : 18
-z : 0
-amir : 0
-amir hossein : 0
+ : 6
+ : 0
+ : 14
+ : 47
+a : 49 -99
+
+ : 45
+ : 97
+ : 39
+ : 3
+ : 83
+ : 0
+ : 43
+ : 42
+ : 43
+ : 49
+ : 45
+ : 0
+ : 0
+ : 0
+ : 166
+ : 39
+ : 59
+ : 51
+ : 85
+ : 243
+ : 188

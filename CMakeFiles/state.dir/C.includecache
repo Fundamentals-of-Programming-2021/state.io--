@@ -6,5 +6,53 @@
 
 #IncludeRegexTransform: 
 
-/home/amir-ravan/Desktop/mabani project/state.io/src/user_name.c
+/home/amir-ravan/Desktop/mabani project/state.io/src/attack.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
 
