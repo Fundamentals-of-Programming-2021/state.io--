@@ -18,10 +18,46 @@
 //potion 1 for unlimit unit generation
 //potion 2 for super speed
 //potion 3 for freezing others
+//potion 4 for making enemy units ally
+
+int potion_num = 5;
+
+void potion_initializer()
+{
+    for (int i = 0; i < potion_num; i++)
+    {
+        potions[i].owner = -2;
+    }
+    
+}
+
+int set_potion(int num)
+{
+    int l[2],k[2],b[2] = {rand()%5,rand()%5};
+    _double_coord difference;
+
+    for (int i = 0; i < 2; i++)
+    {   
+        l[i] = rand()%(country_count-1);
+        k[i] = rand()%(country_count-1);
+        if (k[i] == l[i])
+        {
+            k[i] = rand()%(country_count-1);
+
+        }
+        difference.x = state[country[l[i]].capital.x][country[l[i]].capital.y].center.x - state[country[k[i]].capital.x][country[k[i]].capital.y].center.x;
+        difference.y = state[country[l[i]].capital.x][country[l[i]].capital.y].center.y - state[country[k[i]].capital.x][country[k[i]].capital.y].center.y;
+        b[i] = rand() %potion_num;
+        float frac = 1/(rand()%2+2);
+        potions[b[i]].center[i].x = (state[country[l[i]].capital.x][country[l[i]].capital.y].center.x + state[country[k[i]].capital.x][country[k[i]].capital.y].center.x)/2 + frac*(difference.x);
+        potions[b[i]].center[i].y = (state[country[l[i]].capital.x][country[l[i]].capital.y].center.y + state[country[k[i]].capital.x][country[k[i]].capital.y].center.y)/2 + frac*(difference.y);
+    }
+    return b[num];
+}
 
 int active_potion(int player_num)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < potion_num; i++)
     {
         if (potions[i].owner == player_num)
         {
@@ -32,10 +68,9 @@ int active_potion(int player_num)
     
 }
 
-
 int only_one_potion(int player_num)
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < potion_num; i++)
     {
         if (potions[i].owner == player_num)
         {
@@ -57,7 +92,7 @@ void potion_check(int num)
     }
     else if (num == 1)
     {
-        if (time(NULL) - potions[1].start_time > 8)
+        if (time(NULL) - potions[1].start_time > 9)
         {
             potions[1].owner = -2;
         }
@@ -76,30 +111,33 @@ void potion_check(int num)
             potions[3].owner = -2;
         }
     }
-    
+    else if (num == 4)
+    {
+        if (time(NULL) - potions[4].start_time > 5)
+        {
+            potions[4].owner = -2;
+        }
+    }
     
     
 }
 
-void print_potion(SDL_Renderer *Renderer , int l,int k,int pot_num,int potion_counter)
+void print_potion(SDL_Renderer *Renderer,int pot_num,int potion_counter)
 {
     char *address = malloc(100);
-    strcpy(address,"images/potions/3.png");
-    if (pot_num == 0) address[15] = 0+'0';
-    if (pot_num == 1) address[15] = 1+'0';
-    if (pot_num == 2) address[15] = 2+'0';
+    strcpy(address,"images/potions/ .png");
+    address[15] = pot_num+'0';
+    
 
-    potions[pot_num].center.x = 0.35*(state[country[l].capital.x][country[l].capital.y].center.x + state[country[k].capital.x][country[k].capital.y].center.x);
-    potions[pot_num].center.y = 0.35*(state[country[l].capital.x][country[l].capital.y].center.y + state[country[k].capital.x][country[k].capital.y].center.y);
     if (potions[pot_num].owner == -2)
     {
         SDL_Texture *texture = IMG_LoadTexture(Renderer,address);
         if (texture == NULL)
         {
-            printf("gooz\n");
+            printf("goooooooz\n");
         }
         
-        SDL_Rect dst_rect = texture_position(texture,potions[pot_num].center.x,potions[pot_num].center.y,40,40);
+        SDL_Rect dst_rect = texture_position(texture,potions[pot_num].center[potion_counter].x,potions[pot_num].center[potion_counter].y,40,40);
         SDL_RenderCopy(Renderer,texture,NULL,&dst_rect);
         SDL_DestroyTexture(texture);
     }
@@ -110,8 +148,8 @@ void print_potion(SDL_Renderer *Renderer , int l,int k,int pot_num,int potion_co
         {
             for (int j = 0; j < attacks[i].passed_unit; j++)
             {
-                temp.x = potions[pot_num].center.x+20;
-                temp.y = potions[pot_num].center.y+20;
+                temp.x = potions[pot_num].center[potion_counter].x+20;
+                temp.y = potions[pot_num].center[potion_counter].y+20;
                 if (colission_detect(temp,soldier[i][j].center,30))
                 {
                     if (only_one_potion(soldier[i][j].player))
@@ -120,8 +158,8 @@ void print_potion(SDL_Renderer *Renderer , int l,int k,int pot_num,int potion_co
                         Mix_PlayChannel(3,drink_chunk,0);
                         potions[pot_num].owner = soldier[i][j].player;
                         potions[pot_num].start_time = time(NULL);
-                        potions[pot_num].center.x = 0;
-                        potions[pot_num].center.y = 0;
+                        potions[pot_num].center[potion_counter].x = 0;
+                        potions[pot_num].center[potion_counter].y = 0;
                         if (Mix_Paused(3))
                         {
                             Mix_FreeChunk(drink_chunk);
@@ -150,6 +188,11 @@ void print_potion(SDL_Renderer *Renderer , int l,int k,int pot_num,int potion_co
     else if (pot_num == 0)
     {
         help_texture = IMG_LoadTexture(Renderer,"menu/boost.png");
+        
+    }
+    else if (pot_num == 4)
+    {
+        help_texture = IMG_LoadTexture(Renderer,"menu/no_enemy.png");
         
     }
     SDL_Rect dst_rect = {.x = 5,.y = 10,.w = 200,.h = 50};

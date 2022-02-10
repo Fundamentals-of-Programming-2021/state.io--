@@ -39,7 +39,7 @@ int colission_detect(_double_coord obj,_double_coord dest,int diameter)
 
 int sign(int num)
 {
-    return (num > 0 ? 1 : -1);
+    return (num >= 0 ? 1 : -1);
 }
 
 int power(int power,int base)

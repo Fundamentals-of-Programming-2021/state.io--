@@ -15,6 +15,7 @@
 #include "state_io.h"
 
 
+//saves game with your user_name
 void save_game()
 {
     FILE *save;
@@ -48,11 +49,10 @@ void save_game()
 
     fclose(save);
 }
-
+//loads_game based on user_name
 void load_game(char *location)
 {
     FILE *load = fopen(location,"r");
-    printf("%s\n",location);
     if (load == NULL)
     {
         printf("gooz\n");
@@ -85,7 +85,8 @@ void load_game(char *location)
     fclose(load);
     
 }
-
+//sum pf all units that a player owns
+// -100 if he looses
 int score_counter(int player)
 {
     int res = 0;
@@ -96,42 +97,26 @@ int score_counter(int player)
             res += country[i].unitcount;
         }
     }
-    return res;
+    if (res == 0)
+    {
+        return -100;
+    }
     
+    return res;
 }
 
+//updates_leaderboard in saves/leaderboard
 void update_leaderboard()
 {
-    FILE *leaderboard = fopen("saves/leader-board","r+");
+    FILE *leaderboard = fopen("saves/leader-board","a");
     if (leaderboard == NULL)
     {
         printf("gooz\n");
         return;
     }
-    char *buffer = malloc(100);
-    int temp;
-    bool check = 0;
-    while (!feof(leaderboard))
-    {
-        fscanf(leaderboard,"%s : %d",buffer,&temp);
-        if (!strcmp(buffer,user_name))
-        {
-            check = 1;
-            temp = score_counter(0) - score_counter(1) - score_counter(2) - score_counter(3);
-            fprintf(leaderboard," %d\n",temp);
-            break;
-        }
-    }
-
-    if (check == 0)
-    {
-        fprintf(leaderboard,"%s : %d\n",user_name,score_counter(0));
-    }
-    free(buffer);
-    
-    
+    fprintf(leaderboard,"%s : %d\n",user_name,score_counter(0));  
 }
-
+//check if a file existes or not
 int is_any_load()
 {
     char buffer[100] = "saves/";
@@ -143,7 +128,7 @@ int is_any_load()
     }
     return 1;
 }
-
+//counts line count of a file
 int file_lines(char *file_address)
 {
     FILE *file = fopen(file_address,"r");
@@ -164,8 +149,9 @@ int file_lines(char *file_address)
     fclose(file);
     return line_num;
 }
-char score_board[10][1000];
 
+//saves all scores in format user_name : score
+char score_board[100][1000];
 void read_leaderboard()
 {
     FILE *leaderboard = fopen("saves/leader-board","r");
@@ -174,31 +160,41 @@ void read_leaderboard()
     while (!feof(leaderboard))
     {
         score[head].score = 0;
-        fscanf(leaderboard,"%s :",score[head].user_name);
-        for (char i = getc(leaderboard); i != '\n' && i != EOF; i = getc(leaderboard))
-        {
-            fscanf(leaderboard,"%d",&temp_num);
-            score[head].score += temp_num;
-        }
-
-        for (int i = 0; i < head; i++)
-        {
-            if (score[head].score >= score[i].score)
-            {
-                _score temp;
-                temp = score[head];
-                score[head] = score[i];
-                score[i] = temp;
-            }
-        }
+        fscanf(leaderboard,"%s : %d\n",score[head].user_name,&score[head].score);
         head++;
         if (head >= 100)
         {
             head = 0;
         }
-        
     }
     fclose(leaderboard);
+
+    for (int i = 0; i < head + 1; i++)
+    {
+        for (int j = i+1; j < head + 1; j++)
+        {
+            if (!strcmp(score[i].user_name,score[j].user_name) || !strcmp(score[i].user_name,"/n") || score[i].user_name == NULL)
+            {
+                score[i].score += score[j].score;
+                strcpy(score[j].user_name," ");
+            }
+        }
+    }
+
+    for (int i = 0; i < head+1; i++)
+    {
+        for (int j = i+1; j < head+1; j++)
+        {
+            if (score[i].score <= score[j].score)
+            {
+                _score temp;
+                temp = score[j];
+                score[j] = score[i];
+                score[i] = temp;
+            }
+        }
+    }
+
     char buffer[40];
     char temp[30];
 
@@ -206,21 +202,46 @@ void read_leaderboard()
     {
         buffer[i] = '\0';
     }
-
-    for (int i = 0; i < 8; i++)
+    int count = (file_lines("saves/leader-board") < 8 ? file_lines("saves/leader-board") : 8);
+    for (int i = 0; i <= count; i++)
     {
-        sprintf(temp," : %d",score[i].score);
-        strcat(buffer,score[i].user_name);
-        strcat(buffer,temp);
-        strcpy(score_board[i],buffer);
-        for (int j = 0; j < 40; j++)
+        if (strcmp(score[i].user_name," "))
+        {        
+            sprintf(temp," : %d",score[i].score);
+            strcat(buffer,score[i].user_name);
+            strcat(buffer,temp);
+            strcpy(score_board[i],buffer);
+            for (int j = 0; j < 40; j++)
+            {
+                buffer[j] = '\0';
+            }
+        }
+        else
         {
-            buffer[j] = '\0';
+            strcpy(score_board[i]," ");
+            if (count < head)
+            {
+                count++;
+            }
+            
+        }
+    }
+    for (int i = 0; i <= count; i++)
+    {
+        if (!strcmp(score_board[i]," ") || !strcmp(score_board[i]," : 0") || score_board[i] == NULL)
+        {
+            for (int j = i; j <= count; j++)
+            {
+                strcpy(score_board[j],score_board[j+1]);
+            }
         }
     }
     
+    
+    
 }
 
+//show leader board in renderer in format user_name : score
 void show_leaderboard(SDL_Renderer *Renderer)
 {
     SDL_Texture *score_texture;
@@ -232,6 +253,13 @@ void show_leaderboard(SDL_Renderer *Renderer)
 
     for (int i = 0; i < (file_lines("saves/leader-board") <= 8 ? file_lines("saves/leader-board") : 8); i++)
     {
+        if (!strcmp(score_board[i]," ") || !strcmp(score_board[i]," : 0") || score_board[i] == NULL)
+        {
+            for (int j = i; j <= 10; j++)
+            {
+                strcpy(score_board[j],score_board[j+1]);
+            }
+        }
         score_texture = text_texture(Renderer,score_board[i],60,TXT_HANDWRITE,255,255,100,255);
         score_rect = texture_position(score_texture,TXR_CENTER,250+70*i,TXR_DEFAULT_SIZE,TXR_CENTER);
         SDL_RenderCopy(Renderer,score_texture,NULL,&score_rect);
@@ -239,6 +267,7 @@ void show_leaderboard(SDL_Renderer *Renderer)
     SDL_DestroyTexture(score_texture);
 }
 
+//back option in page
 void show_leaderboard_options(SDL_Renderer *Renderer)
 {
     rectangleColor(Renderer,WIDTH-340,830,WIDTH -40,930,0xffffffff);
@@ -269,14 +298,24 @@ void show_leaderboard_options(SDL_Renderer *Renderer)
     SDL_DestroyTexture(back_texture);
 }
 
-void leaderboeard_main(SDL_Renderer *Renderer)
+
+void leaderboeard_main(SDL_Window *window)
 {
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    TTF_Init();
+    Mix_Init(MIX_INIT_MP3);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+    SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+
     strcpy(BKG_PATH,"images/background/score board/1.jpg");
     SDL_Texture *BKG_texture = IMG_LoadTexture(Renderer,BKG_PATH);
     SDL_ShowCursor(0);
     read_leaderboard();
+    //celebrate music :)
+    //pretty fun
     Mix_Music *celebrate_mus = Mix_LoadMUS("music/leader board.mp3");
     Mix_PlayMusic(celebrate_mus,-1);
+
     while(running[STG_LEADERBOARD])
 	{
         frame++;
@@ -295,9 +334,13 @@ void leaderboeard_main(SDL_Renderer *Renderer)
 		SDL_Delay(1000/FPS); 
         SDL_RenderClear(Renderer);
 	}
+    SDL_DestroyRenderer(Renderer);
     SDL_DestroyTexture(BKG_texture);
     BKG_texture = NULL;
     Mix_FreeMusic(celebrate_mus);
+    IMG_Quit();
+    TTF_Quit();
+    Mix_Quit();
 }
 
 #endif

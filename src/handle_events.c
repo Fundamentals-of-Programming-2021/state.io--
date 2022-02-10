@@ -18,6 +18,7 @@
 
 void handling(SDL_Renderer *renderer)
 {
+    
 	SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT)
@@ -32,13 +33,20 @@ void handling(SDL_Renderer *renderer)
                 {
                     if (strlen(user_name) > 20)
                     {
-
+                        Mix_Chunk *beep = Mix_LoadWAV("music/beep.wav");
+                        Mix_PlayChannel(3,beep,0);
                     }
+
                     else
                     {
                         if (*(event.text.text) != SDLK_SPACE)
                         {
-                        
+                            Mix_Chunk *button= Mix_LoadWAV("music/button1.wav");
+                            if (rand()%2)
+                            {
+                                button = Mix_LoadWAV("music/button2.wav");
+                            }
+                            Mix_PlayChannel(-1,button,0);
                             user_name[strlen(user_name)] = *(event.text.text);
                             user_name[strlen(user_name)] = '\0';
                         }
@@ -83,9 +91,9 @@ void handling(SDL_Renderer *renderer)
                     if (stage == STG_FIRSTPAGE)
                     {
                         selected_option += 1;
-                        if (selected_option > 2)
+                        if (selected_option > 3)
                         {
-                            selected_option = 2;
+                            selected_option = 3;
                         }
                     }
                     else if (stage == STG_SELECTMAP)
@@ -187,7 +195,7 @@ void handling(SDL_Renderer *renderer)
 }
 
 
-_coord center = { .x = 295 , .y = 950};
+_coord center = { .x = 200 , .y = 950};
 void sound_control(SDL_Renderer *Renderer)
 {
     SDL_Texture *sound_texture = IMG_LoadTexture(Renderer,"images/icon/sound_icon.png");

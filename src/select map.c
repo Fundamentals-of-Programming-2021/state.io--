@@ -1,6 +1,7 @@
 #ifndef __SELECT__MAP__
 #define __SELECT__MAP__
 
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
@@ -49,7 +50,8 @@ void selectmap_show_options(SDL_Renderer *Renderer)
         {
             load_previous = 0;
             saved_map = 0;
-
+            Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+            Mix_PlayChannel(-1,sword,0);
             running[STG_SELECTMAP] = 0;
             running[STG_INGAME] = 1;
             Mix_PauseMusic();
@@ -77,7 +79,8 @@ void selectmap_show_options(SDL_Renderer *Renderer)
             Mix_PauseMusic();
             running[STG_SELECTMAP] = 0;
             running[STG_INGAME] = 1;
-
+            Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+            Mix_PlayChannel(-1,sword,0);
             stage = STG_INGAME;
         }
         
@@ -89,6 +92,8 @@ void selectmap_show_options(SDL_Renderer *Renderer)
         {
             load_previous = 1;
             saved_map =1;
+            Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+            Mix_PlayChannel(-1,sword,0);
 
             load_game("saves/test_map");
             running[STG_SELECTMAP] = 0;
@@ -104,6 +109,8 @@ void selectmap_show_options(SDL_Renderer *Renderer)
         {
             load_previous = 1;
             saved_map =1;
+            Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+            Mix_PlayChannel(-1,sword,0);
 
             load_game("saves/saved_map 3");
             running[STG_SELECTMAP] = 0;
@@ -119,6 +126,8 @@ void selectmap_show_options(SDL_Renderer *Renderer)
         {
             load_previous = 1;
             saved_map =1;
+            Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+            Mix_PlayChannel(-1,sword,0);
             load_game("saves/saved_map 2");
             running[STG_SELECTMAP] = 0;
             stage = STG_INGAME;
@@ -133,8 +142,11 @@ void selectmap_show_options(SDL_Renderer *Renderer)
 
 }
 
-int main_selectmap(SDL_Renderer *Renderer)
+int main_selectmap(SDL_Window *window)
 {
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    TTF_Init();
+    SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     strcpy(BKG_PATH,"images/background/1.jpg");
     SDL_Texture *BKG_texture = IMG_LoadTexture(Renderer,BKG_PATH);
     SDL_Rect BKG_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
@@ -159,8 +171,12 @@ int main_selectmap(SDL_Renderer *Renderer)
         SDL_RenderClear(Renderer);
 
 	}
+    SDL_DestroyRenderer(Renderer);
     SDL_DestroyTexture(BKG_texture);
     BKG_texture = NULL;
+    IMG_Quit();
+    TTF_Quit();
+    Mix_Quit();
 }
 
 

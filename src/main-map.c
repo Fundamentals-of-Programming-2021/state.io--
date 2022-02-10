@@ -14,11 +14,15 @@
 #include "state_io.h"
 
 
-void main_map(SDL_Renderer *Renderer)
+void main_map(SDL_Window *window)
 {   
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    TTF_Init();
+    Mix_Init(MIX_INIT_MP3);
+    SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     
-    strcpy(BKG_PATH,"images/background/bg 1.jpg");
-    Mix_Music *playground_music = Mix_LoadMUS("music/play ground.mp3");
+    strcpy(BKG_PATH,"images/background/bg 3.jpg");
+    Mix_Music *playground_music = Mix_LoadMUS("music/playground.mp3");
     
     if (!load_previous)
     {
@@ -43,26 +47,30 @@ void main_map(SDL_Renderer *Renderer)
     Mix_VolumeMusic(50); 
 	time_t starting_time = time(NULL);
     time_t current_time;
-    int l[2] = {rand() % country_count,rand()%country_count} ,k[2] = {rand() % country_count,rand() % country_count} ,b[2] = {rand()%3,rand()%3};
-    for (int i = 0; i < 4; i++)
-    {
-        potions[i].owner = -2;
-    }
-    
+    int active_pot_num[2] = {set_potion(0),set_potion(1)}; 
+    potion_initializer();
+    bool do_we_have_potion[2] = {rand()%2,rand()%2};
+    frame = 0;
+    play_chunk = 1;
     while(running[STG_INGAME])
 	{
         
-        SDL_RenderCopy(Renderer,BKG_texture,NULL,&bkg_rect);
+        Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+        SDL_RenderCopy(Renderer,BKG_texture,NULL,NULL);
         light_background(frame, Renderer);
         printmap(Renderer);
         show_help_message(Renderer);
         selected_state(Renderer);
 
         frame ++;
-        if ( 250 <= frame && frame <= 2000)
+        if ( 800 <= frame%2000 && frame%2000 <= 1300)
         {
             rainmaker(Renderer);
 
+        }
+        else
+        {
+            Mix_HaltChannel(6);
         }
         
         if(frame == 15990)frame = 0;
@@ -88,28 +96,24 @@ void main_map(SDL_Renderer *Renderer)
             AI();
         } 
 
-        if (frame % 200 == 0)
+        if (frame % (rand()%50+300) == 0)
         {
-            for (int i = 0; i < 2; i++)
-            {   
-                l[i] = rand()%country_count;
-                k[i] = rand()%country_count;
-                if (k[i] == l[i])
-                {
-                    k[i] = rand()%country_count;
-                }
-                
-                b[i] = rand()%4;
-            }
+            active_pot_num[0] = set_potion(0);
+            active_pot_num[1] = set_potion(1);
+            do_we_have_potion[0] = rand()%2;
+            do_we_have_potion[1] = rand()%2;
         }
 
         for (int i = 0; i < 2; i++)
         {
-            print_potion(Renderer,l[i],k[i],b[i],i);
+            if (do_we_have_potion[i])
+            {
+                print_potion(Renderer,active_pot_num[i],i);
+            }            
         }
         
     
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             potion_check(i);        
         }
@@ -131,10 +135,15 @@ void main_map(SDL_Renderer *Renderer)
 		SDL_Delay(1000/FPS);
         SDL_RenderClear(Renderer);  
 	}
+    SDL_RenderClear(Renderer);
     Mix_FreeMusic(playground_music);
     SDL_DestroyTexture(BKG_texture);
+    SDL_DestroyRenderer(Renderer);
     update_leaderboard();
     save_game();
+    IMG_Quit();
+    TTF_Quit();
+    Mix_Quit();
 
 }
 

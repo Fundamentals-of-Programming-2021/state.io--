@@ -32,6 +32,188 @@ SDL2/SDL_image.h
 state_io.h
 /home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
 
+/home/amir-ravan/Desktop/mabani project/state.io/src/first_menu.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/handle_events.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/map.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/mouse.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/other.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/potion.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/save_load_scoreboard.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
 /home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
 stdio.h
 -
@@ -55,4 +237,56 @@ SDL2/SDL_mixer.h
 -
 SDL2/SDL_image.h
 -
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/text_input.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
+
+/home/amir-ravan/Desktop/mabani project/state.io/src/texture_functions.c
+stdio.h
+-
+stdbool.h
+-
+time.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+SDL2/SDL.h
+-
+SDL2/SDL2_gfxPrimitives.h
+-
+SDL2/SDL_ttf.h
+-
+SDL2/SDL_mixer.h
+-
+SDL2/SDL_image.h
+-
+state_io.h
+/home/amir-ravan/Desktop/mabani project/state.io/src/state_io.h
 

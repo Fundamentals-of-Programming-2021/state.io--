@@ -35,7 +35,7 @@ void armory_place(SDL_Renderer* renderer,_double_coord coord, Uint32 color,int p
     if (player == 0)
     {
         player_icon_texture = IMG_LoadTexture(renderer,"images/player_icon/0.png");
-        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-19,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-25,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     }
     else if (player == 1)
     {
@@ -45,7 +45,7 @@ void armory_place(SDL_Renderer* renderer,_double_coord coord, Uint32 color,int p
     else if (player == 2)
     {
         player_icon_texture = IMG_LoadTexture(renderer,"images/player_icon/2.png");
-        player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-31,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
+        player_icon_rect = texture_position(player_icon_texture,coord.x-30,coord.y-31,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);        
     }
     else if (player == 3)
     {
@@ -58,8 +58,14 @@ void armory_place(SDL_Renderer* renderer,_double_coord coord, Uint32 color,int p
         player_icon_rect = texture_position(player_icon_texture,coord.x-20,coord.y-30,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
     }
     SDL_RenderCopy(renderer,player_icon_texture,NULL,&player_icon_rect);
+    char *buffer = malloc(4*sizeof(char));
+    sprintf(buffer,"%d",soldier_num);
+    player_icon_texture = text_texture(renderer,buffer,12,TXT_HEADER,255,255,255,200);
+    player_icon_rect = texture_position(player_icon_texture,coord.x-5,coord.y+28,TXR_DEFAULT_SIZE,TXR_CENTER);
+    SDL_RenderCopy(renderer,player_icon_texture,NULL,&player_icon_rect);
     SDL_DestroyTexture(player_icon_texture);
-    print_text(renderer,0,soldier_num," ",coord.x-3,coord.y+30);
+    free(buffer);
+
 }
 
 void init_country()
@@ -100,7 +106,7 @@ void initializer(SDL_Renderer *Renderer)
         for (int j = 0; j < STATECOUNT.y; j++)
         {
             temp = rand() ;
-            if(temp % 5 == 1 || temp % 5 == 2)
+            if(temp % 9 == 1 || temp % 9 == 2 || temp % 9 == 3 || temp % 9 == 4)
             {
                 state[i][j].avalable = 0;
             }
@@ -126,12 +132,12 @@ void printmap(SDL_Renderer *Renderer)
     {
         for (int j = 0; j < STATECOUNT.y; j++)
         {
-            filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x01ffff05);
-            polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x02ffff00);
+            filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x02010105);
+            polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x02010100);
 
             if (state[i][j].country_num != -1 && state[i][j].avalable)
             {
-                filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,country[state[i][j].country_num].color);
+                filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,country[state[i][j].country_num].color+0x44000000);
                 polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,country[state[i][j].country_num].color);
                 if (state[i][j].is_capital)
                 {
@@ -243,7 +249,11 @@ void setmap(SDL_Renderer *Renderer)
                     n = rand()%STATECOUNT.x;
                     m = rand()%STATECOUNT.y;
                 } while (state[n][m].avalable == 0 || country[state[m][n].country_num].player != -1);
-                country[state[m][n].country_num].player = i;        
+                country[state[m][n].country_num].player = i;  
+                if (i == 0)
+                {
+                    country[state[m][n].country_num].unitcount = 50;        
+                }
             }
         }
     }
@@ -255,14 +265,14 @@ void SetColors()
     {
         for (int j = 0; j < STATECOUNT.y; j++)
         {
-            country[state[i][j].country_num].color = 0x88050505+ state[i][j].country_num * 0x00885515;
+            country[state[i][j].country_num].color = 0x44050505+ state[i][j].country_num * 0x00885515;
         }
     }
 }
 
 void light_background(int frame,SDL_Renderer *Renderer)
 {
-    static Uint32 color = 0x50252525;
+    static Uint32 color = 0x50404040;
     static int temp = 1;
 
     if (frame % 3 == 0)
@@ -274,7 +284,7 @@ void light_background(int frame,SDL_Renderer *Renderer)
     {
         temp = 1;
     }
-    else if (color == 0x50505050)
+    else if (color == 0x50888888)
     {
         temp = -1;
     }
@@ -283,16 +293,25 @@ void light_background(int frame,SDL_Renderer *Renderer)
 
 void rainmaker(SDL_Renderer *renderer)
 {
-    if (rand()%2 == 1)
+    if (!Mix_Playing(6))
     {
-        int length = 8;
-        for (int i = 0; i < 50; i++)
-        {
-            _coord randomplace ={.x = rand()%WIDTH, .y = rand()%HEIGHT};
-            lineColor(renderer,randomplace.x,randomplace.y,randomplace.x+length,randomplace.y+length,0xffff55ff);
-            lineColor(renderer,randomplace.x-1,randomplace.y-1,randomplace.x+length,randomplace.y+length,0xffffff55);
-            lineColor(renderer,randomplace.x-3,randomplace.y-3,randomplace.x+length,randomplace.y+length,0xffff5555);
-        }
+        Mix_Chunk *rain = Mix_LoadWAV("music/rain.wav");
+        Mix_VolumeChunk(rain,50);
+        Mix_PlayChannelTimed(6,rain,-1,20000);
+    }
+    if (stage != STG_INGAME)
+    {
+        Mix_HaltChannel(6);
+    }
+    
+    
+    int length = 8;
+    for (int i = 0; i < 50; i++)
+    {
+        _coord randomplace ={.x = rand()%WIDTH, .y = rand()%HEIGHT};
+        lineColor(renderer,randomplace.x,randomplace.y,randomplace.x+length,randomplace.y+length,0xffff55ff);
+        lineColor(renderer,randomplace.x-1,randomplace.y-1,randomplace.x+length,randomplace.y+length,0xffffff55);
+        lineColor(renderer,randomplace.x-3,randomplace.y-3,randomplace.x+length,randomplace.y+length,0xffff5555);
     }
 }
 

@@ -30,6 +30,8 @@ void textinput_show_options(SDL_Renderer *Renderer)
         {
             if (strlen(user_name) != 0)
             {
+                Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+                Mix_PlayChannel(-1,sword,0);
                 load_previous = 0;
                 running[STG_USERINPUT] = 0;
                 stage = STG_SELECTMAP;
@@ -48,6 +50,8 @@ void textinput_show_options(SDL_Renderer *Renderer)
         {
             if (strlen(user_name) != 0)
             {
+                Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+                Mix_PlayChannel(-1,sword,0);
                 load_previous = 1;
                 running[STG_USERINPUT] = 0;
                 running[STG_INGAME] = 1;
@@ -63,10 +67,12 @@ void textinput_show_options(SDL_Renderer *Renderer)
 
 }
 
-void main_username(SDL_Renderer *Renderer)
+void main_username(SDL_Window *window)
 {
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    TTF_Init();
 	SDL_StartTextInput();
-    
+    SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_Texture *BKG_texture = IMG_LoadTexture(Renderer,BKG_PATH);
     SDL_Rect BKG_rect = texture_position(BKG_texture,TXR_CENTER,TXR_CENTER,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
 
@@ -95,8 +101,15 @@ void main_username(SDL_Renderer *Renderer)
         
         textinput_show_options(Renderer);
 		handling(Renderer);
-
+        message_texture = text_texture(Renderer,"please ENTER username :",60,TXT_HEADER,255,255,255,200);
+        messsage_rect = texture_position(message_texture,TXR_CENTER,350,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
         SDL_RenderCopy(Renderer,message_texture,NULL,&messsage_rect);
+        boxColor(Renderer,10,590,WIDTH - 10,640,0xcf010101);
+        rectangleColor(Renderer,10,590,WIDTH - 10,640,0xff010150);
+        message_texture = text_texture(Renderer,"! : load game is not allowed with new username !",40,TXT_HANDWRITE,255,255,255,200);
+        messsage_rect = texture_position(message_texture,TXR_CENTER,590,TXR_DEFAULT_SIZE,TXR_DEFAULT_SIZE);
+        SDL_RenderCopy(Renderer,message_texture,NULL,&messsage_rect);
+
         SDL_RenderCopy(Renderer,userTXT_texture,NULL,&userTXT_rect);
         
         mouse_cursor(Renderer);
@@ -107,8 +120,12 @@ void main_username(SDL_Renderer *Renderer)
 
 	}
     SDL_DestroyTexture(message_texture);
+    SDL_DestroyTexture(userTXT_texture);
     SDL_DestroyTexture(BKG_texture);
     BKG_texture = NULL;
     SDL_StopTextInput();
+    SDL_DestroyRenderer(Renderer);
+    TTF_Quit();
+    IMG_Quit();
 }
 #endif // !__TEXT__INPUT__

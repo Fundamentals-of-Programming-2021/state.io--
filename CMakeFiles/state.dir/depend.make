@@ -28,8 +28,6 @@ CMakeFiles/state.dir/src/potion.c.o: src/state_io.h
 CMakeFiles/state.dir/src/save_load_scoreboard.c.o: src/save_load_scoreboard.c
 CMakeFiles/state.dir/src/save_load_scoreboard.c.o: src/state_io.h
 
-CMakeFiles/state.dir/src/select_map.c.o: src/select\ map.c
-CMakeFiles/state.dir/src/select_map.c.o: src/state_io.h
 
 CMakeFiles/state.dir/src/text_input.c.o: src/state_io.h
 CMakeFiles/state.dir/src/text_input.c.o: src/text_input.c

@@ -18,7 +18,7 @@ void init_global()
     mouse_is_down = 0;
     saved_map =0;
     return_is_down = 0;
-    stage = STG_INGAME;
+    stage = STG_FIRSTPAGE;
     load_previous = 0;
     atc_num = 0;
     play_chunk = 1;
@@ -27,7 +27,7 @@ void init_global()
     map_num = -2;
     win = 1;
     country_count = 0;
-    player_count = 4;
+    player_count = rand()%3+2;
     for (int i = 0; i < 7; i++)
     {
         running[i] = 1;
@@ -35,50 +35,42 @@ void init_global()
     
     frame = 0;
 }
+
 int main() 
 {
-    init_global();
     srand(time(NULL)*1000);
+
+    init_global();
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-    TTF_Init();
-    Mix_Init(MIX_INIT_MP3);
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 	SDL_Window *window = SDL_CreateWindow("state.io", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,WIDTH,
     HEIGHT, SDL_WINDOW_OPENGL);
-    SDL_Renderer *Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_ShowCursor(0);
 
     while(running[STG_WHOLEGAME])
     {
         if (stage == STG_FIRSTPAGE)
         {
-            main_first_page(Renderer);
+            main_first_page(window);
         }
         else if (stage == STG_USERINPUT)
         {
-            main_username(Renderer);
+            main_username(window);
         }
         else if(stage == STG_SELECTMAP)
         {
-            main_selectmap(Renderer);
+            main_selectmap(window);
         }
         else if (stage == STG_INGAME)
         {
-            main_map(Renderer);
+            main_map(window);
         }
         else if (stage == STG_LEADERBOARD)
         {
-            leaderboeard_main(Renderer);
+            leaderboeard_main(window);
         }
-        SDL_RenderClear(Renderer);
     }
     // SDL_DestroyTexture(Texture);
     SDL_DestroyTexture(mouse_texture);
     SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(Renderer);
-    IMG_Quit();
-    TTF_Quit();
-    Mix_Quit();
     SDL_Quit();
 }

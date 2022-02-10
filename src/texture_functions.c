@@ -80,26 +80,6 @@ SDL_Texture *dynamic_background(SDL_Renderer *Renderer,SDL_Texture *BKG_texture,
     return BKG_texture;
 }
 
-void print_text(SDL_Renderer *renderer,int flag,int number,char* str,int x , int y)
-{
-    char *buffer = malloc(sizeof(char)*100);
-    if (flag == 0)
-    {
-        sprintf(buffer,"%d",number);
-    }
-    else if(flag == 1)
-    {
-        sprintf(buffer,"%s",str);
-    }
-    else if(flag == 2)
-    {
-        sprintf(buffer,"%s %d",str,number);
-    }
-    stringRGBA(renderer,x,y,buffer,255,255,255,255);
-}
-
-
-
 void selected_state(SDL_Renderer *Renderer)
 {
     if (F_mouse_state.x != -1 && F_mouse_state.y != -1 && mouse_is_down && country[state[F_mouse_state.x][F_mouse_state.y].country_num].player == 0)
@@ -120,10 +100,11 @@ void selected_state(SDL_Renderer *Renderer)
             } 
         }
     }
+    Uint32 potion_color[6] = {0x5500ffff,0x5500ff00,0x550000ff,0x55ffff00,0x55ffffff,0x55006aff};
 
     for (int i = 0; i < country_count; i++)
     {
-        if (active_potion(country[i].player) == 0)
+        if (active_potion(country[i].player) != -1)
         {
             for (int m = 0; m < STATECOUNT.x; m++)
             {
@@ -131,67 +112,14 @@ void selected_state(SDL_Renderer *Renderer)
                 {
                     if (state[m][n].country_num == i)
                     {
-                        filledPolygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0x5500ffff);
-                        polygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0xff00ffff);
+                        filledPolygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,potion_color[active_potion(country[i].player)]);
+                        polygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,potion_color[active_potion(country[i].player)]+0xaa000000);
                     }
-                    
                 }
-                
             }
-            
-        }
-        if (active_potion(country[i].player) == 1)
-        {
-            for (int m = 0; m < STATECOUNT.x; m++)
-            {
-                for (int n = 0; n < STATECOUNT.y; n++)
-                {
-                    if (state[m][n].country_num == i)
-                    {
-                        filledPolygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0x5500ff00);
-                        polygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0xff00ff00);
-                    }
-                    
-                }
-                
-            }
-            
-        }if (active_potion(country[i].player) == 2)
-        {
-            for (int m = 0; m < STATECOUNT.x; m++)
-            {
-                for (int n = 0; n < STATECOUNT.y; n++)
-                {
-                    if (state[m][n].country_num == i)
-                    {
-                        filledPolygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0x550000ff);
-                        polygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0xff0000ff);
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        if (active_potion(country[i].player) == 3)
-        {
-            for (int m = 0; m < STATECOUNT.x; m++)
-            {
-                for (int n = 0; n < STATECOUNT.y; n++)
-                {
-                    if (state[m][n].country_num == i)
-                    {
-                        filledPolygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0x55ffff00);
-                        polygonColor(Renderer,state[m][n].points[0],state[m][n].points[1],6,0xffffff00);
-                    }
-                    
-                }
-                
-            }
-            
         }
     }
-    
+
 
     if (S_mouse_state.x != -1 && S_mouse_state.y != -1)
     {
@@ -203,8 +131,8 @@ void selected_state(SDL_Renderer *Renderer)
                 {
                     if (state[i][j].country_num == state[S_mouse_state.x][S_mouse_state.y].country_num)
                     {
-                        filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x10ffffff);
-                        polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0xffffffff);
+                        filledPolygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0x10010150);
+                        polygonColor(Renderer,state[i][j].points[0],state[i][j].points[1],6,0xff010150);
                     }
                 }
                 

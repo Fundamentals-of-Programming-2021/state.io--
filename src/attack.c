@@ -27,7 +27,6 @@ void solder_increasing()
             {
                 if (!country[i].is_under_attack)
                 {
-                
                     if (active_potion(country[i].player) == 0 && potions[0].start_time - time(NULL) <= 3)
                     {
                         country[i].unitcount += 3;
@@ -248,7 +247,14 @@ void print_soldier(SDL_Renderer *Renderer,_coord F_state , _coord S_state  ,int 
         {
             if (soldier[Attack_num][i].player != country[state[soldier[Attack_num][i].dest.x][soldier[Attack_num][i].dest.y].country_num].player)
             {
-                country[state[S_state.x][S_state.y].country_num].unitcount--;
+                if (country[state[S_state.x][S_state.y].country_num].player == potions[4].owner)
+                {
+                    country[state[S_state.x][S_state.y].country_num].unitcount++;
+                }
+                else
+                {
+                    country[state[S_state.x][S_state.y].country_num].unitcount--;
+                }
                 if (country[state[S_state.x][S_state.y].country_num].unitcount <= 0)
                 {
                     country[state[S_state.x][S_state.y].country_num].player = soldier[Attack_num][i].player;
@@ -348,6 +354,7 @@ void end_game(SDL_Renderer *Renderer)
 {   
     if (!is_game_running() && !is_enemy_attacking())
     {
+        Mix_HaltChannel(6);
         Mix_Chunk *end_soundEffect;
         SDL_Texture *texture;
         SDL_Rect rect;
@@ -394,7 +401,8 @@ void end_game(SDL_Renderer *Renderer)
             
             if (mouse_is_down)
             {
-                
+                Mix_Chunk *sword = Mix_LoadWAV("music/sword.wav");
+                Mix_PlayChannel(-1,sword,0);
                 mouse_is_down = 0;
                 running[STG_LEADERBOARD] = 1;
                 stage = STG_LEADERBOARD;
@@ -460,7 +468,7 @@ void AI()
             {
                 for (int l = rand()%country_count; l < country_count; l++)
                 {
-                    if (is_game_running() && country[l].player != i && country[j].unitcount >= country[l].unitcount && country[j].unitcount > 10)
+                    if (is_game_running() && country[l].player != i && country[j].unitcount >= country[l].unitcount && country[j].unitcount > 15)
                     {
                         attack_initializer(country[j].capital,country[l].capital);
                     }
